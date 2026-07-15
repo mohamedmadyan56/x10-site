@@ -91,7 +91,11 @@ export default function HeroSection() {
       `}</style>
 
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2">
+            <div className="w-full h-full bg-gradient-to-b from-transparent via-petrol/40 to-transparent" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-coral rounded-full shadow-lg shadow-coral/50" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
+          </div>
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
