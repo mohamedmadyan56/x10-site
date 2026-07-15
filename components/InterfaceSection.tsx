@@ -81,7 +81,7 @@ export default function InterfaceSection() {
                     key={tab.key}
                     onClick={() => setActiveLang(tab.key)}
                     className={`flex-1 py-2.5 text-center font-en text-xs cursor-pointer transition-all duration-200 border-b-2 ${
-                      activeLang === tab.key
+                      (activeLang === tab.key)
                         ? 'text-text-light border-b-coral bg-coral/5'
                         : 'text-text-muted border-b-transparent'
                     }`}
@@ -91,7 +91,7 @@ export default function InterfaceSection() {
                 ))}
               </div>
 
-              <div className="p-5">
+              <div className="p-5" dir={activeLang === 'ar' ? 'rtl' : 'ltr'}>
                 <div className="bg-dark-card2 rounded-lg p-2.5 flex items-center gap-2 border border-white/10 mb-3">
                   <div className="flex gap-1.5">
                     <span className="w-[10px] h-[10px] rounded-full bg-[#e74c3c]" />
@@ -99,10 +99,10 @@ export default function InterfaceSection() {
                     <span className="w-[10px] h-[10px] rounded-full bg-[#2ecc71]" />
                   </div>
                   <div className="flex-1 flex gap-4 justify-center">
-                    <span className="text-xs text-text-muted">{isArabic ? 'المسار' : 'Journey'}</span>
-                    <span className="text-xs text-text-muted">{isArabic ? 'الأساس' : 'Features'}</span>
+                    <span className="text-xs text-text-muted">{activeLang === 'ar' ? 'المسار' : 'Journey'}</span>
+                    <span className="text-xs text-text-muted">{activeLang === 'ar' ? 'الأساس' : 'Features'}</span>
                     <span className="text-xs text-text-sub border-b-[1.5px] border-coral pb-0.5">
-                      {isArabic ? 'التجربة' : 'Experience'}
+                      {activeLang === 'ar' ? 'التجربة' : 'Experience'}
                     </span>
                   </div>
                   <div className="flex items-center font-en text-sm font-bold tracking-tight">
@@ -118,23 +118,23 @@ export default function InterfaceSection() {
                 </div>
 
                 <div className="bg-white/5 border border-white/10 rounded-lg p-3 mb-2.5 text-sm text-text-muted transition-all duration-200 hover:border-petrol/40 relative overflow-hidden">
-                  <span className="text-[10px] text-petrol-light font-bold block mb-1">{isArabic ? 'الاسم الكامل' : 'Full Name'}</span>
-                  {isArabic ? 'أحمد محمد العتيبي' : 'Ahmed Mohammed Al-Otaibi'}
+                  <span className="text-[10px] text-petrol-light font-bold block mb-1">{activeLang === 'ar' ? 'الاسم الكامل' : 'Full Name'}</span>
+                  {activeLang === 'ar' ? 'أحمد محمد العتيبي' : 'Ahmed Mohammed Al-Otaibi'}
                   <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-petrol scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
                 </div>
                 <div className="bg-white/5 border border-petrol/40 rounded-lg p-3 mb-2.5 text-sm text-text-muted transition-all duration-200 hover:border-petrol/40 relative overflow-hidden">
-                  <span className="text-[10px] text-petrol-light font-bold block mb-1">{isArabic ? 'رقم الجوال' : 'Phone Number'}</span>
+                  <span className="text-[10px] text-petrol-light font-bold block mb-1">{activeLang === 'ar' ? 'رقم الجوال' : 'Phone Number'}</span>
                   05X XXX XXXX
                   <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-petrol scale-x-100" />
                 </div>
                 <div className="bg-white/5 border border-white/10 rounded-lg p-3 mb-2.5 text-sm text-text-muted transition-all duration-200 hover:border-petrol/40 relative overflow-hidden">
-                  <span className="text-[10px] text-petrol-light font-bold block mb-1">{isArabic ? 'رمز التحقق OTP' : 'OTP Code'}</span>
-                  <span className="text-text-muted">{isArabic ? 'أدخل الرمز المرسل...' : 'Enter the sent code...'}</span>
+                  <span className="text-[10px] text-petrol-light font-bold block mb-1">{activeLang === 'ar' ? 'رمز التحقق OTP' : 'OTP Code'}</span>
+                  <span className="text-text-muted">{activeLang === 'ar' ? 'أدخل الرمز المرسل...' : 'Enter the sent code...'}</span>
                   <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-petrol scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
                 </div>
 
                 <button className="w-full bg-coral text-white border-none rounded-lg py-3 flex items-center justify-center gap-2 font-ar text-sm font-bold cursor-pointer transition-all mt-1 hover:bg-coral-dark">
-                  {isArabic ? 'تحقق وادخل الداشبورد' : 'Verify & Enter Dashboard'}
+                  {activeLang === 'ar' ? 'تحقق وادخل الداشبورد' : 'Verify & Enter Dashboard'}
                 </button>
               </div>
             </div>
