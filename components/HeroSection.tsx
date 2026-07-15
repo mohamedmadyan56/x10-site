@@ -109,7 +109,7 @@ export default function HeroSection() {
           >
             <img
               src="/generated-image-7e678040-c54d-4cfc-9407-a606acdc5521.png"
-              alt="لوحة تحكم X10"
+              alt={isArabic ? 'لوحة تحكم X10 لإدارة الفروع والصلاحيات' : 'X10 dashboard for branch and permission management'}
               className="w-full rounded-[var(--r-lg)] block border"
               style={{
                 borderColor: 'var(--border)',
