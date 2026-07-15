@@ -136,14 +136,14 @@ export default function HeroSection() {
             className="relative hidden lg:block"
           >
             <div
-              className="absolute top-4 -left-6 bg-dark-card2 border border-white/10 rounded-xl px-3.5 py-3 flex items-center gap-2.5 shadow-2xl z-10"
+              className="absolute top-4 -left-6 z-10 w-28 h-28 md:w-32 md:h-32"
               style={{ animation: 'floatCard 4s ease-in-out infinite' }}
             >
-              <span className="text-2xl">🔐</span>
-              <div>
-                <strong className="block text-text-light text-xs">Auth OTP</strong>
-                <span className="text-text-muted text-[11px]">{isArabic ? 'متصل وآمن' : 'Connected & Secure'}</span>
-              </div>
+              <img
+                src="/hero-image.png"
+                alt="hero"
+                className="w-full h-full object-contain rounded-xl"
+              />
             </div>
 
             <div
