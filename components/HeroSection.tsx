@@ -72,6 +72,10 @@ export default function HeroSection() {
           from { opacity: 0; }
           to { opacity: 1; }
         }
+        @keyframes pulseGlow {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.05); }
+        }
         @keyframes growUp {
           from { transform: scaleY(0); transform-origin: bottom; }
           to { transform: scaleY(1); transform-origin: bottom; }
@@ -135,14 +139,29 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="relative hidden lg:block"
           >
-            <div className="w-full">
-              <img
-                src="/hero-image.png"
-                alt="hero"
-                className="w-full h-auto object-contain rounded-2xl shadow-2xl"
-                style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(5,96,116,0.2)' }}
-              />
-            </div>
+            <motion.div
+              className="w-full max-w-xl mx-auto"
+              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="relative">
+                <div
+                  className="absolute -inset-4 bg-gradient-to-br from-coral/20 via-petrol/20 to-coral/20 rounded-3xl blur-2xl"
+                  style={{ animation: 'pulseGlow 3s ease-in-out infinite' }}
+                />
+                <div className="relative overflow-hidden rounded-3xl" style={{ clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)' }}>
+                  <motion.img
+                    src="/hero-image.png"
+                    alt="hero"
+                    className="w-full h-auto object-cover scale-110"
+                    style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.5)' }}
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
