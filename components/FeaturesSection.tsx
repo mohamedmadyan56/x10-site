@@ -1,80 +1,298 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 import { useLocale } from '@/context/LocaleContext';
 
-const featuresAr = [
-  { icon: '🎨', title: 'هوية X10 المشتركة', desc: 'الشعار يستخدم Tajawal للعربية والـ Poppins للإنجليزية والألوان المحددة الجاهزة.', tag: 'Design System' },
-  { icon: '⚡', title: 'Next.js حيث يفيد فعلاً', desc: 'الموقع العام يشغّل Server Components مع دعم كامل للـ ISR. محدوداً في بيئة صغيرة.', tag: 'Next.js' },
-  { icon: '🔐', title: 'تجربة صادقة', desc: 'لا توعد بأسعار أو POS أو RBAC قبل رؤية كيف تقبل الأنظمة الحالية التعامل معها.', tag: 'Authentic UX' },
-  { icon: '🌍', title: 'دعم كامل للغتين', desc: 'الهيدر والفهرس والأقسام اتجاها متطابقان ويدعمان التبديل بين اللغتين والثيمات.', tag: 'i18n AR/EN' },
-  { icon: '🏢', title: 'Multi-Tenant آمن', desc: 'كل نشاط تجاري معزول في tenant خاص. الخادم يتحقق من الصلاحية قبل أي وصول.', tag: 'Tenant Isolation' },
-  { icon: '📱', title: 'هاتف أولاً', desc: 'التسجيل عبر OTP على الهاتف دون كلمة مرور. تجربة سلسة وسريعة من اللحظة الأولى.', tag: 'Phone Auth' },
-];
+function useReveal() {
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const el = e.target as HTMLElement;
+            const delay = parseInt(el.dataset.d || '0', 10);
+            el.style.transitionDelay = delay + 'ms';
+            el.classList.add('in');
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.14 }
+    );
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      const parent = el.parentElement;
+      if (parent) {
+        const sibs = [...parent.querySelectorAll(':scope > .reveal')];
+        (el as HTMLElement).dataset.d = String(Math.min(sibs.indexOf(el) * 80, 320));
+      }
+      io.observe(el);
+    });
+    return () => io.disconnect();
+  }, []);
+}
 
-const featuresEn = [
-  { icon: '🎨', title: 'Shared X10 Identity', desc: 'The logo uses Tajawal for Arabic and Poppins for English with ready-defined colors.', tag: 'Design System' },
-  { icon: '⚡', title: 'Next.js Where It Helps', desc: 'The public site runs Server Components with full ISR support. Limited in a small environment.', tag: 'Next.js' },
-  { icon: '🔐', title: 'Honest Experience', desc: 'No promises of pricing, POS, or RBAC before seeing how current systems handle them.', tag: 'Authentic UX' },
-  { icon: '🌍', title: 'Full Bilingual Support', desc: 'Header, index, and sections share the same direction and support language and theme switching.', tag: 'i18n AR/EN' },
-  { icon: '🏢', title: 'Secure Multi-Tenant', desc: 'Each business activity is isolated in its own tenant. The server verifies access before any entry.', tag: 'Tenant Isolation' },
-  { icon: '📱', title: 'Phone First', desc: 'Registration via OTP on phone without a password. A seamless and fast experience from the first moment.', tag: 'Phone Auth' },
-];
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ width: 13, height: 13 }}>
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  );
+}
+
+function XIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ width: 13, height: 13 }}>
+      <path d="M18 6 6 18M6 6l12 12"/>
+    </svg>
+  );
+}
 
 export default function FeaturesSection() {
-  const { isArabic, dir } = useLocale();
-  const features = isArabic ? featuresAr : featuresEn;
+  const { isArabic } = useLocale();
+  const ref = useRef<HTMLDivElement>(null);
+  useReveal();
 
   return (
-    <section id="features" className="bg-dark-bg" dir={dir}>
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 py-20 md:py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.7 }}
-          className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 items-end mb-12"
-        >
-          <div>
-            <span className="inline-flex items-center gap-2 text-sm font-bold text-petrol-light uppercase tracking-wider mb-4 before:w-6 before:h-0.5 before:bg-petrol">
-              {isArabic ? 'لماذا X10' : 'Why X10'}
-            </span>
-            <h2 className="text-[clamp(1.8rem,3vw,2.6rem)] font-extrabold text-text-light leading-tight mb-4">
-              {isArabic ? (
-                <>أساس واجهة واحد<br />بدل نسخ متفرقة</>
-              ) : (
-                <>One interface foundation<br />instead of scattered copies</>
-              )}
-            </h2>
-            <p className="text-base text-text-sub leading-relaxed max-w-[520px]">
-              {isArabic
-                ? 'الصفحة تستخدم المشترك والخطوط والألوان من حزمة الواجهة المشتركة.'
-                : 'The page uses shared components, fonts, and colors from the shared interface package.'}
-            </p>
-          </div>
-        </motion.div>
+    <section id="features" className="pad-y" ref={ref}>
+      <div className="wrap">
+        <div className="sec-head reveal" style={{ maxWidth: 620, marginBottom: 56 }}>
+          <span className="eyebrow">{isArabic ? 'لماذا X10' : 'Why X10'}</span>
+          <h2 className="text-[clamp(2rem,3.8vw,2.9rem)] font-black tracking-[-0.01em] my-[16px] mx-0">
+            {isArabic
+              ? 'كل ما تحتاجه لتشغيل شبكة فروع، في مكان واحد'
+              : 'Everything you need to run a branch network, in one place'}
+          </h2>
+          <p className="text-[1.15rem] leading-[1.8]" style={{ color: 'var(--text-muted)' }}>
+            {isArabic
+              ? 'مبني على أساس واجهة موحّد، مع تقنيات حديثة تخدم التجربة فعلاً لا للاستعراض.'
+              : 'Built on a unified interface foundation, with modern technologies that serve the experience, not just for show.'}
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, i) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: '-50px' }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group bg-dark-card border border-white/10 rounded-2xl p-7 cursor-pointer relative overflow-hidden transition-all duration-300 hover:border-petrol/50 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/30"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-petrol/0 to-petrol/0 group-hover:from-petrol/15 group-hover:to-transparent transition-all duration-300 pointer-events-none" />
-              <div className="w-12 h-12 bg-petrol/15 rounded-xl flex items-center justify-center text-[22px] mb-5 transition-colors duration-300 group-hover:bg-petrol/30">
-                {feature.icon}
+        <div className="grid grid-cols-6 gap-[20px] auto-rows-[minmax(210px,auto)]">
+          <div
+            className="cell col-span-4 row-span-2 p-0 reveal"
+            style={{
+              background: 'var(--surface-1)',
+              border: '1px solid var(--border-soft)',
+              borderRadius: 'var(--r-md)',
+              overflow: 'hidden',
+              position: 'relative',
+              transition: 'transform 0.4s var(--ease-out-quint), border-color 0.4s, background 0.4s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.borderColor = 'var(--teal-dim)';
+              e.currentTarget.style.background = 'var(--surface-2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = '';
+              e.currentTarget.style.borderColor = '';
+              e.currentTarget.style.background = '';
+            }}
+          >
+            <div className="p-[34px] flex flex-col h-full">
+              <div
+                className="w-[48px] h-[48px] rounded-[13px] grid place-items-center mb-[18px]"
+                style={{ background: 'oklch(45% 0.06 192 / 0.2)', color: 'var(--teal)' }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }}>
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                  <path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>
+                </svg>
               </div>
-              <h3 className="text-[17px] font-bold text-text-light mb-2">{feature.title}</h3>
-              <p className="text-sm text-text-muted leading-relaxed">{feature.desc}</p>
-              <span className="inline-block mt-4 text-[11px] text-[#7dd4e0] bg-petrol/15 rounded-lg px-2.5 py-0.5 font-en">
-                {feature.tag}
-              </span>
-            </motion.div>
-          ))}
+              <h3 className="text-[1.35rem] mb-[10px]">{isArabic ? 'مصفوفة صلاحيات دقيقة (RBAC)' : 'Precise Permissions Matrix (RBAC)'}</h3>
+              <p className="text-[1rem] leading-[1.8]" style={{ color: 'var(--text-muted)' }}>
+                {isArabic
+                  ? 'حدد بالضبط من يرى، يعدّل، وينشئ، ويحذف. كل دور معزول، وكل فرع بحدوده الخاصة.'
+                  : 'Specify exactly who sees, edits, creates, and deletes. Each role is isolated, each branch with its own boundaries.'}
+              </p>
+              <div
+                className="mt-auto rounded-[var(--r-sm)] overflow-hidden border flex-1 min-h-[200px] relative"
+                style={{
+                  borderColor: 'var(--border)',
+                  marginTop: 24,
+                  background:
+                    'radial-gradient(circle at 30% 20%, oklch(50% 0.08 192 / 0.25), transparent 55%), linear-gradient(160deg, var(--surface-2), var(--bg-2))',
+                }}
+              >
+                <div className="p-[26px] grid gap-[12px]">
+                  <div className="grid grid-cols-[1.4fr_repeat(4,1fr)] items-center gap-[8px]">
+                    <span></span>
+                    <span className="text-[0.72rem] text-center font-[family-name:var(--font-en)]" style={{ color: 'var(--text-faint)' }}>
+                      {isArabic ? 'عرض' : 'View'}
+                    </span>
+                    <span className="text-[0.72rem] text-center font-[family-name:var(--font-en)]" style={{ color: 'var(--text-faint)' }}>
+                      {isArabic ? 'تعديل' : 'Edit'}
+                    </span>
+                    <span className="text-[0.72rem] text-center font-[family-name:var(--font-en)]" style={{ color: 'var(--text-faint)' }}>
+                      {isArabic ? 'إنشاء' : 'Create'}
+                    </span>
+                    <span className="text-[0.72rem] text-center font-[family-name:var(--font-en)]" style={{ color: 'var(--text-faint)' }}>
+                      {isArabic ? 'حذف' : 'Delete'}
+                    </span>
+                  </div>
+                  {[
+                    { role: isArabic ? 'المدير العام' : 'General Manager', checks: [true, true, true, true] },
+                    { role: isArabic ? 'مدير الفرع' : 'Branch Manager', checks: [true, true, true, false] },
+                    { role: isArabic ? 'المحاسب' : 'Accountant', checks: [true, true, false, false] },
+                  ].map((row) => (
+                    <div key={row.role} className="grid grid-cols-[1.4fr_repeat(4,1fr)] items-center gap-[8px]">
+                      <span className="text-[0.92rem] font-medium" style={{ color: 'var(--text-muted)' }}>
+                        {row.role}
+                      </span>
+                      {row.checks.map((check, i) => (
+                        <div key={i} className="grid place-items-center">
+                          <div
+                            className="w-[22px] h-[22px] rounded-[7px] grid place-items-center"
+                            style={{
+                              background: check
+                                ? 'oklch(45% 0.06 192 / 0.25)'
+                                : 'oklch(45% 0.08 42 / 0.2)',
+                              color: check ? 'var(--teal)' : 'var(--orange)',
+                            }}
+                          >
+                            {check ? <CheckIcon /> : <XIcon />}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {[
+            {
+              icon: (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }}>
+                  <rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>
+                </svg>
+              ),
+              title: isArabic ? 'الهاتف أولاً' : 'Phone First',
+              desc: isArabic
+                ? 'تسجيل دخول عبر OTP دون كلمات مرور. سلس وسريع من اللحظة الأولى.'
+                : 'OTP login without passwords. Smooth and fast from the first moment.',
+              tag: 'Phone Auth',
+              accent: true,
+              colSpan: 2,
+              rowSpan: 1,
+            },
+            {
+              icon: (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }}>
+                  <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              ),
+              title: isArabic ? 'سريع بشكل حقيقي' : 'Truly Fast',
+              desc: isArabic
+                ? 'Server Components حيث تفيد، وذاكرة تخزين ذكية للبيانات المتكررة.'
+                : 'Server Components where useful, smart caching for repeated data.',
+              tag: 'Next.js',
+              accent: false,
+              colSpan: 2,
+              rowSpan: 1,
+            },
+            {
+              icon: (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }}>
+                  <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/>
+                </svg>
+              ),
+              title: isArabic ? 'دعم كامل للغتين' : 'Full Bilingual Support',
+              desc: isArabic
+                ? 'عربي وإنجليزي باتجاه صحيح، تبديل فوري دون إعادة تحميل.'
+                : 'Arabic and English with correct direction, instant switch without reload.',
+              tag: 'i18n AR/EN',
+              accent: false,
+              colSpan: 2,
+              rowSpan: 1,
+            },
+            {
+              icon: (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }}>
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              ),
+              title: isArabic ? 'عزل آمن لكل مستأجر' : 'Secure Per-Tenant Isolation',
+              desc: isArabic
+                ? 'كل نشاط تجاري في مساحته الخاصة تماماً. البيانات لا تتقاطع.'
+                : 'Each business in its own space. Data never crosses.',
+              tag: 'Multi-Tenant',
+              accent: true,
+              colSpan: 3,
+              rowSpan: 1,
+            },
+            {
+              icon: (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ width: 24, height: 24 }}>
+                  <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17-2 2"/>
+                </svg>
+              ),
+              title: isArabic ? 'هوية X10 مشتركة' : 'Shared X10 Identity',
+              desc: isArabic
+                ? 'نظام تصميم موحّد: خطوط Tajawal وSora، وألوان محددة تنعكس على كل شاشة.'
+                : 'Unified design system: Tajawal & Sora fonts, consistent colors across every screen.',
+              tag: 'Design System',
+              accent: false,
+              colSpan: 3,
+              rowSpan: 1,
+            },
+          ].map((feature, i) => {
+            const colSpanClass = `col-span-${feature.colSpan}`;
+            return (
+              <div
+                key={i}
+                className={`cell reveal`}
+                style={{
+                  gridColumn: `span ${feature.colSpan}`,
+                  gridRow: feature.rowSpan > 1 ? `span ${feature.rowSpan}` : 'auto',
+                  background: 'var(--surface-1)',
+                  border: '1px solid var(--border-soft)',
+                  borderRadius: 'var(--r-md)',
+                  padding: 30,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'transform 0.4s var(--ease-out-quint), border-color 0.4s, background 0.4s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.borderColor = 'var(--teal-dim)';
+                  e.currentTarget.style.background = 'var(--surface-2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = '';
+                  e.currentTarget.style.borderColor = '';
+                  e.currentTarget.style.background = '';
+                }}
+              >
+                <div
+                  className="w-[48px] h-[48px] rounded-[13px] grid place-items-center mb-[18px]"
+                  style={{
+                    background: feature.accent
+                      ? 'oklch(55% 0.1 42 / 0.18)'
+                      : 'oklch(45% 0.06 192 / 0.2)',
+                    color: feature.accent ? 'var(--orange)' : 'var(--teal)',
+                  }}
+                >
+                  {feature.icon}
+                </div>
+                <h3 className="text-[1.35rem] mb-[10px]">{feature.title}</h3>
+                <p className="text-[1rem] leading-[1.8]" style={{ color: 'var(--text-muted)' }}>
+                  {feature.desc}
+                </p>
+                <span
+                  className="mt-auto pt-[16px] font-[family-name:var(--font-en)] text-[0.82rem] font-semibold tracking-[0.02em]"
+                  style={{ color: 'var(--teal)' }}
+                >
+                  {feature.tag}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,9 +1,11 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
-import JourneySection from "@/components/JourneySection";
+import LogosStrip from "@/components/LogosStrip";
 import FeaturesSection from "@/components/FeaturesSection";
-import InterfaceSection from "@/components/InterfaceSection";
-import CTASection from "@/components/CTASection";
+import PlatformSection from "@/components/PlatformSection";
+import MetricsSection from "@/components/MetricsSection";
+import JourneySection from "@/components/JourneySection";
+import CTABanner from "@/components/CTABanner";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -12,10 +14,12 @@ export default function Home() {
       <Navbar />
       <main>
         <HeroSection />
-        <JourneySection />
+        <LogosStrip />
         <FeaturesSection />
-        <InterfaceSection />
-        <CTASection />
+        <PlatformSection />
+        <MetricsSection />
+        <JourneySection />
+        <CTABanner />
       </main>
       <Footer />
     </>

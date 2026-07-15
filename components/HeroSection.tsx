@@ -1,171 +1,150 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLocale } from '@/context/LocaleContext';
 
 export default function HeroSection() {
-  const { isArabic, dir } = useLocale();
-  const particlesRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const container = particlesRef.current;
-    if (!container) return;
-    const colors = ['#056074', '#E78871', '#0a9ab8', '#f7f9fb'];
-    for (let i = 0; i < 18; i++) {
-      const p = document.createElement('div');
-      const size = Math.random() * 4 + 2;
-      p.className = 'particle';
-      Object.assign(p.style, {
-        width: `${size}px`,
-        height: `${size}px`,
-        left: `${Math.random() * 100}%`,
-        background: colors[Math.floor(Math.random() * colors.length)],
-        animationDuration: `${Math.random() * 12 + 8}s`,
-        animationDelay: `${Math.random() * 8}s`,
-        position: 'absolute',
-        borderRadius: '50%',
-        animation: `float ${Math.random() * 12 + 8}s linear infinite`,
-        opacity: '0',
-      });
-      container.appendChild(p);
-    }
-    return () => {
-      container.innerHTML = '';
-    };
-  }, []);
+  const { isArabic } = useLocale();
+  const sectionRef = useRef(null);
+  const { scrollY } = useScroll();
+  const imgY = useTransform(scrollY, [0, 500], [0, 80]);
 
   return (
-    <section
-      className="relative min-h-screen flex items-center overflow-hidden pt-20"
-      dir={dir}
-    >
-      <div className="absolute inset-0 pointer-events-none"
+    <section ref={sectionRef} className="hero relative pt-[72px] pb-[96px] overflow-hidden">
+      <div className="grid-x" />
+      <div
+        className="glow"
         style={{
-          background: `
-            radial-gradient(ellipse 60% 50% at 70% 40%, rgba(5,96,116,0.35) 0%, transparent 70%),
-            radial-gradient(ellipse 40% 60% at 20% 70%, rgba(231,136,113,0.12) 0%, transparent 60%),
-            linear-gradient(180deg, #0d1f24 0%, #0a1a1f 100%)
-          `
+          width: '520px', height: '520px',
+          background: 'oklch(55% 0.12 192 / 0.22)',
+          top: '-140px', left: '-160px',
         }}
       />
       <div
-        className="absolute inset-0 pointer-events-none opacity-0 animate-[gridFade_3s_ease-in_forwards]"
+        className="glow"
         style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
+          width: '420px', height: '420px',
+          background: 'oklch(60% 0.14 42 / 0.14)',
+          bottom: '-120px', right: '-120px',
         }}
       />
-      <div ref={particlesRef} className="absolute inset-0 pointer-events-none overflow-hidden" />
 
-      <style jsx>{`
-        @keyframes float {
-          0% { transform: translateY(100vh) scale(0); opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 0.6; }
-          100% { transform: translateY(-20vh) scale(1); opacity: 0; }
-        }
-        @keyframes gridFade {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes pulseGlow {
-          0%, 100% { opacity: 0.6; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.05); }
-        }
-        @keyframes growUp {
-          from { transform: scaleY(0); transform-origin: bottom; }
-          to { transform: scaleY(1); transform-origin: bottom; }
-        }
-        @keyframes floatCard {
-          0%, 100% { transform: translateY(0) rotate(-2deg); }
-          50% { transform: translateY(-8px) rotate(-1deg); }
-        }
-        @keyframes floatCard2 {
-          0%, 100% { transform: translateY(0) rotate(1deg); }
-          50% { transform: translateY(-6px) rotate(0deg); }
-        }
-      `}</style>
-
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12">
-        <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2">
-            <div className="w-full h-full bg-gradient-to-b from-transparent via-petrol/40 to-transparent" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-coral rounded-full shadow-lg shadow-coral/50" style={{ animation: 'pulse 2s ease-in-out infinite' }} />
-          </div>
+      <div className="wrap" style={{ position: 'relative', zIndex: 2 }}>
+        <div
+          className="grid grid-cols-1 lg:grid-cols-[1.05fr_1.15fr] gap-[60px] items-center"
+          style={{ direction: isArabic ? 'rtl' : 'ltr' }}
+        >
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="inline-flex items-center gap-1.5 bg-petrol/20 border border-petrol/50 rounded-full px-3.5 py-1.5 text-sm text-[#7dd4e0] mb-6">
-              <span className="w-1.5 h-1.5 bg-coral rounded-full animate-pulse" />
-              {isArabic ? 'النسخة الجديدة متاحة الآن' : 'New version is now available'}
-            </div>
-
-            <h1 className="text-[clamp(2.2rem,4vw,3.2rem)] font-extrabold leading-tight text-text-light mb-6">
+            <span className="eyebrow">
+              {isArabic ? 'منصة إدارة الفروع متعددة المستأجرين' : 'Multi-Tenant Branch Management Platform'}
+            </span>
+            <h1 className="text-[clamp(2.6rem,5.2vw,4.3rem)] font-black tracking-[-0.01em] my-[22px]">
               {isArabic ? (
-                <>من أول تسجيل<br />إلى تشغيل يومي<br /><span className="text-coral">بثقة</span></>
+                <>أدِر كل فروعك من <span style={{ color: 'var(--teal)' }}>لوحة واحدة</span>، لا فوضى ولا نسخ متفرقة</>
               ) : (
-                <>From signup to<br />daily operation<br /><span className="text-coral">with confidence</span></>
+                <>Manage all your branches from <span style={{ color: 'var(--teal)' }}>one dashboard</span>, no chaos or scattered copies</>
               )}
             </h1>
-
-            <p className="text-base text-text-sub leading-relaxed mb-8 max-w-[460px]">
+            <p
+              className="text-[1.24rem] leading-[1.85] mb-[36px]"
+              style={{ color: 'var(--text-muted)', maxWidth: '52ch' }}
+            >
               {isArabic
-                ? 'X10 يبدأ من تجربة واضحة. تم توجيه المستخدم إلى تسجيل الهاتف وإنشاء النشاط داخل الداشبورد، دون وعود تشغيلية غير منفذة.'
-                : 'X10 starts with a clear experience. The user is guided to phone registration and activity creation inside the dashboard, without unfulfilled operational promises.'}
+                ? 'X10 يربط فروعك، صلاحياتك، ومستخدميك في نظام واحد آمن. عزل كامل لكل مستأجر، تحكم دقيق في الأدوار، وتجربة عربية أصيلة من أول ثانية.'
+                : 'X10 connects your branches, permissions, and users in one secure system. Full isolation per tenant, precise role control, and an authentic Arabic experience from the first second.'}
             </p>
-
-            <div className="flex flex-wrap items-center gap-4">
-              <a
-                href="#features"
-                className="bg-coral text-white border-none rounded-xl px-7 py-3.5 font-ar text-base font-bold cursor-pointer transition-all no-underline inline-flex items-center gap-2 hover:bg-coral-dark hover:-translate-y-0.5 hover:shadow-lg hover:shadow-coral/35"
-              >
-                {isArabic ? 'ابدأ من الداشبورد' : 'Start from Dashboard'}
-                <span>{isArabic ? '←' : '→'}</span>
+            <div className="flex gap-[14px] flex-wrap mb-[40px]">
+              <a href="#cta" className="btn btn-primary btn-lg">
+                {isArabic ? 'جرّب مجاناً' : 'Try for Free'}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
               </a>
-              <a
-                href="#journey"
-                className="bg-transparent text-text-light border border-white/20 rounded-xl px-7 py-3.5 font-ar text-base font-medium cursor-pointer transition-all no-underline inline-flex items-center gap-2 hover:border-petrol hover:text-[#7dd4e0]"
-              >
-                {isArabic ? 'اكتشف المسار' : 'Discover the Path'}
+              <a href="#platform" className="btn btn-ghost btn-lg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="6 4 20 12 6 20 6 4"/>
+                </svg>
+                {isArabic ? 'شاهد العرض' : 'Watch Demo'}
               </a>
+            </div>
+            <div className="flex gap-[40px] flex-wrap">
+              <div>
+                <div className="font-[family-name:var(--font-en)] text-[2.05rem] font-bold tabular-nums" style={{ color: 'var(--text)' }}>
+                  3,400<span style={{ color: 'var(--teal)' }}>+</span>
+                </div>
+                <div className="text-sm" style={{ color: 'var(--text-faint)', marginTop: '2px' }}>
+                  {isArabic ? 'فرع نشط على المنصة' : 'Active Branches'}
+                </div>
+              </div>
+              <div>
+                <div className="font-[family-name:var(--font-en)] text-[2.05rem] font-bold tabular-nums" style={{ color: 'var(--text)' }}>
+                  99.9<span style={{ color: 'var(--teal)' }}>%</span>
+                </div>
+                <div className="text-sm" style={{ color: 'var(--text-faint)', marginTop: '2px' }}>
+                  {isArabic ? 'جاهزية التشغيل' : 'Uptime'}
+                </div>
+              </div>
+              <div>
+                <div className="font-[family-name:var(--font-en)] text-[2.05rem] font-bold tabular-nums" style={{ color: 'var(--text)' }}>
+                  &lt;5<span style={{ color: 'var(--teal)' }}>د</span>
+                </div>
+                <div className="text-sm" style={{ color: 'var(--text-faint)', marginTop: '2px' }}>
+                  {isArabic ? 'وقت الإعداد' : 'Setup Time'}
+                </div>
+              </div>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="relative hidden lg:block"
+            className="relative"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{ y: imgY }}
           >
-            <motion.div
-              className="w-full max-w-xl mx-auto"
-              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            <img
+              src="/generated-image-7e678040-c54d-4cfc-9407-a606acdc5521.png"
+              alt="لوحة تحكم X10"
+              className="w-full rounded-[var(--r-lg)] block border"
+              style={{
+                borderColor: 'var(--border)',
+                boxShadow: '0 40px 90px oklch(10% 0.02 205 / 0.7), 0 0 0 1px oklch(50% 0.06 192 / 0.15)',
+              }}
+            />
+            <div
+              className="absolute flex items-center gap-[10px] px-[15px] py-[11px] rounded-[14px] text-sm font-medium animate-[floaty_6s_ease-in-out_infinite]"
+              style={{
+                top: '-18px', right: '-14px',
+                background: 'color-mix(in oklch, var(--surface-2) 82%, transparent)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid var(--border)',
+                boxShadow: '0 16px 40px oklch(10% 0.02 205 / 0.5)',
+              }}
             >
-              <div className="relative">
-                <div
-                  className="absolute -inset-4 bg-gradient-to-br from-coral/20 via-petrol/20 to-coral/20 rounded-3xl blur-2xl"
-                  style={{ animation: 'pulseGlow 3s ease-in-out infinite' }}
-                />
-                <div className="relative overflow-hidden rounded-3xl" style={{ clipPath: 'polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%)' }}>
-                  <motion.img
-                    src="/hero-image.png"
-                    alt="hero"
-                    className="w-full h-auto object-cover scale-110"
-                    style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.5)' }}
-                    animate={{ y: [0, -8, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  />
-                </div>
-              </div>
-            </motion.div>
+              <span className="w-[9px] h-[9px] rounded-full" style={{ background: 'var(--green)' }} />
+              {isArabic ? 'فرع الرياض' : 'Riyadh Branch'}
+              <span style={{ color: 'var(--green)', fontWeight: 700 }}>
+                {isArabic ? 'نشط' : 'Active'}
+              </span>
+            </div>
+            <div
+              className="absolute flex items-center gap-[10px] px-[15px] py-[11px] rounded-[14px] text-sm font-medium animate-[floaty_6s_ease-in-out_infinite_1.5s]"
+              style={{
+                bottom: '40px', left: '-26px',
+                background: 'color-mix(in oklch, var(--surface-2) 82%, transparent)',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid var(--border)',
+                boxShadow: '0 16px 40px oklch(10% 0.02 205 / 0.5)',
+              }}
+            >
+              <span className="w-[9px] h-[9px] rounded-full" style={{ background: 'var(--teal)' }} />
+              {isArabic ? '12 مستخدم متصل الآن' : '12 Users Online Now'}
+            </div>
           </motion.div>
         </div>
       </div>

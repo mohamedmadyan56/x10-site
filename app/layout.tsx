@@ -4,8 +4,8 @@ import { LocaleProvider } from "@/context/LocaleContext";
 import ClientLayout from "@/components/ClientLayout";
 
 export const metadata: Metadata = {
-  title: "X10 — من أول تسجيل إلى تشغيل يومي بثقة",
-  description: "X10 منصة متكاملة لإدارة أعمالك",
+  title: "X10 — منصة إدارة الفروع متعددة المستأجرين",
+  description: "X10 يربط فروعك، صلاحياتك، ومستخدميك في نظام واحد آمن.",
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body className="min-h-full antialiased bg-dark-bg text-text-light">
+      <body>
         <LocaleProvider>
           <ClientLayout>{children}</ClientLayout>
         </LocaleProvider>
