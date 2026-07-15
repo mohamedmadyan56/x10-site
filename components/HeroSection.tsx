@@ -135,108 +135,13 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="relative hidden lg:block"
           >
-            <div
-              className="absolute top-4 -left-6 z-10 w-28 h-28 md:w-32 md:h-32"
-              style={{ animation: 'floatCard 4s ease-in-out infinite' }}
-            >
+            <div className="w-full">
               <img
                 src="/hero-image.png"
                 alt="hero"
-                className="w-full h-full object-contain rounded-xl"
+                className="w-full h-auto object-contain rounded-2xl shadow-2xl"
+                style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(5,96,116,0.2)' }}
               />
-            </div>
-
-            <div
-              className="bg-dark-card border border-white/10 rounded-xl overflow-hidden shadow-2xl transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.01]"
-              style={{ boxShadow: '0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(5,96,116,0.2)' }}
-            >
-              <div className="bg-dark-card2 px-4 py-3 flex items-center gap-2 border-b border-white/10">
-                <div className="flex gap-1.5">
-                  <span className="w-[10px] h-[10px] rounded-full bg-[#e74c3c]" />
-                  <span className="w-[10px] h-[10px] rounded-full bg-[#f39c12]" />
-                  <span className="w-[10px] h-[10px] rounded-full bg-[#2ecc71]" />
-                </div>
-                <div className="flex-1 bg-white/6 rounded-md px-2.5 py-1 font-en text-[11px] text-text-muted text-center">
-                  app.x10.sa/dashboard
-                </div>
-              </div>
-
-              <div className="p-4 grid grid-cols-[auto_1fr] gap-3 min-h-[280px]">
-                <div className="w-14 bg-petrol rounded-xl p-3 flex flex-col gap-3 items-center">
-                  {['🏠', '📦', '📊', '⚙️', '👤'].map((icon, i) => (
-                    <div
-                      key={i}
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm cursor-pointer transition-colors ${
-                        i === 0 ? 'bg-coral' : 'bg-white/15 hover:bg-white/28'
-                      }`}
-                    >
-                      {icon}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex flex-col gap-2.5">
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { label: isArabic ? 'المبيعات' : 'Sales', val: '12,840', cls: 'text-[#4ade80]' },
-                      { label: isArabic ? 'الطلبات' : 'Orders', val: '340', cls: 'text-coral' },
-                      { label: isArabic ? 'العملاء' : 'Customers', val: '1,204', cls: 'text-text-light' },
-                    ].map((stat, i) => (
-                      <div key={i} className="bg-dark-card2 rounded-lg p-2.5 border border-white/10">
-                        <div className="text-[10px] text-text-muted mb-1">{stat.label}</div>
-                        <div className={`text-base font-bold font-en ${stat.cls}`}>{stat.val}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex items-end gap-1 h-15 bg-dark-card2 rounded-lg p-2 border border-white/10 overflow-hidden">
-                    {[55, 40, 75, 60, 90, 50, 70, 85].map((h, i) => (
-                      <div
-                        key={i}
-                        className={`flex-1 rounded-t min-w-[8px] ${i % 2 === 0 ? 'bg-petrol' : 'bg-coral/70'}`}
-                        style={{ height: `${h}%`, animation: `growUp 1s ease-out ${i * 0.1}s both` }}
-                      />
-                    ))}
-                  </div>
-
-                  <div className="bg-dark-card2 rounded-lg border border-white/10 overflow-hidden">
-                    {[
-                      { name: isArabic ? 'أحمد محمد' : 'Ahmed M.', initial: 'أ', bg: '#e74c3c', badge: isArabic ? 'نشط' : 'Active', bdgCls: 'bg-[#4ade80]/15 text-[#4ade80]' },
-                      { name: isArabic ? 'سارة علي' : 'Sara A.', initial: 'س', bg: '#056074', badge: isArabic ? 'نشط' : 'Active', bdgCls: 'bg-[#4ade80]/15 text-[#4ade80]' },
-                      { name: isArabic ? 'خالد ناصر' : 'Khaled N.', initial: 'خ', bg: '#8b5cf6', badge: isArabic ? 'انتظار' : 'Pending', bdgCls: 'bg-[#fbbf24]/15 text-[#fbbf24]' },
-                    ].map((row, i) => (
-                      <div key={i} className="flex items-center px-2.5 py-1.5 gap-2 border-b border-white/10 last:border-b-0">
-                        <div
-                          className="w-[22px] h-[22px] rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
-                          style={{ background: row.bg }}
-                        >
-                          {row.initial}
-                        </div>
-                        <div className="flex-1 text-[11px] text-text-sub">{row.name}</div>
-                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${row.bdgCls}`}>
-                          {row.badge}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="absolute -bottom-6 -left-8 bg-petrol/90 border border-petrol/60 rounded-xl px-3.5 py-2.5 shadow-2xl z-10"
-              style={{ animation: 'floatCard2 5s ease-in-out infinite', animationDelay: '1s' }}
-            >
-              <div className="text-xs text-white/90 flex items-center gap-1.5">
-                <span>🛡️</span>
-                <div>
-                  <strong className="text-sm">{isArabic ? 'Tenant آمن' : 'Secure Tenant'}</strong>
-                  <br />
-                  <span className="text-[10px] opacity-80">
-                    {isArabic ? 'Multi-tenant verified' : 'Multi-tenant verified'}
-                  </span>
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>
