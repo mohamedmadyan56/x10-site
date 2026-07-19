@@ -157,34 +157,136 @@ const journeyStepsEn = [
   { num: '3', title: 'Verifies via phone', desc: 'The phone OTP and registration flow works from the existing auth surface connected to the API' },
   { num: '4', title: 'Selects the active business', desc: 'After login, the server checks tenant membership before showing any protected workspace' },
 ];
+function BranchingStep({ step, index, dir }: { step: typeof journeyStepsAr[0], index: number, dir: 'rtl' | 'ltr' }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 85%", "center 50%"]
+  });
+
+  const isEven = index % 2 === 0;
+
+  const width = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const opacity = useTransform(scrollYProgress, [0.5, 1], [0, 1]);
+  const scale = useTransform(scrollYProgress, [0.5, 1], [0.8, 1]);
+
+  return (
+    <div ref={ref} className="relative w-full mb-12 md:mb-20 flex items-center" dir="ltr">
+      
+      {/* --- Mobile Layout (Stacked) --- */}
+      <div className="md:hidden flex w-full relative z-20" dir={dir}>
+        <div className="w-12 flex flex-col items-center relative shrink-0">
+          <motion.div style={{ scale }} className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#E84545] flex items-center justify-center font-bold text-white shadow-[0_0_20px_rgba(255,107,53,0.5)] z-20 border-[3px] border-[#0d0d0d]">
+            {step.num}
+          </motion.div>
+        </div>
+        <motion.div style={{ opacity, y: useTransform(scrollYProgress, [0.5, 1], [20, 0]) }} className="flex-1 px-4">
+          <div className="bg-[#1a1a1a] border border-[rgba(255,255,255,0.08)] p-5 rounded-2xl shadow-xl">
+            <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
+            <p className="text-[#8B8B9A] text-sm leading-relaxed">{step.desc}</p>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* --- Desktop Layout (Alternating Grid - Forced LTR for structure) --- */}
+      <div className="hidden md:grid grid-cols-2 w-full relative z-20">
+        {isEven ? (
+          <>
+            {/* Column 1: Card on LEFT, aligned to right (center) */}
+            <div className="flex items-center justify-end pr-10">
+              <motion.div style={{ opacity, scale }} className="w-full max-w-md" dir={dir}>
+                <div className="bg-[#1a1a1a] border border-[rgba(255,255,255,0.08)] p-8 rounded-2xl relative shadow-2xl hover:border-[rgba(255,107,53,0.4)] transition-all duration-300">
+                  <div className="absolute top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#E84545] text-white flex items-center justify-center font-black text-2xl shadow-[0_0_20px_rgba(255,107,53,0.5)] z-20 border-4 border-[#0d0d0d] -right-7">
+                    {step.num}
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">{step.title}</h3>
+                  <p className="text-[#8B8B9A] leading-relaxed">{step.desc}</p>
+                </div>
+              </motion.div>
+            </div>
+            {/* Column 2: Branch Line starting from left (center) going right */}
+            <div className="flex items-center justify-start relative">
+              <motion.div className="h-1 bg-gradient-to-r from-[#FF6B35] to-[#E84545]" style={{ width }} />
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Column 1: Branch Line starting from right (center) going left */}
+            <div className="flex items-center justify-end relative">
+              <motion.div className="h-1 bg-gradient-to-l from-[#FF6B35] to-[#E84545]" style={{ width }} />
+            </div>
+            {/* Column 2: Card on RIGHT, aligned to left (center) */}
+            <div className="flex items-center justify-start pl-10">
+              <motion.div style={{ opacity, scale }} className="w-full max-w-md" dir={dir}>
+                <div className="bg-[#1a1a1a] border border-[rgba(255,255,255,0.08)] p-8 rounded-2xl relative shadow-2xl hover:border-[rgba(255,107,53,0.4)] transition-all duration-300">
+                  <div className="absolute top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#E84545] text-white flex items-center justify-center font-black text-2xl shadow-[0_0_20px_rgba(255,107,53,0.5)] z-20 border-4 border-[#0d0d0d] -left-7">
+                    {step.num}
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">{step.title}</h3>
+                  <p className="text-[#8B8B9A] leading-relaxed">{step.desc}</p>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function JourneyMapSection() {
   const { isArabic, dir } = useLocale();
   const steps = isArabic ? journeyStepsAr : journeyStepsEn;
+  const containerRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end 80%"]
+  });
+  
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
   return (
-    <section id="journey-map" className="journey-map-stage" dir={dir}>
-      <div className="journey-map-shell">
+    <section id="journey-map" className="py-16 md:py-24 relative bg-[#0d0d0d] overflow-hidden" dir={dir} ref={containerRef}>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
         <Reveal>
-          <div className="journey-map-info">
-            <h2>{isArabic ? (<>رحلة قصيرة من<br />الصفحة العامة<br />إلى مساحة العمل</>) : (<>A short journey from<br />the public page<br />to the workspace</>)}</h2>
-            <p>{isArabic ? 'هذه النسخة لا تخترع متجراً أو أسعاراً، هي تربط التسويق بالتسجيل الحقيقي الموجود الآن' : 'This version doesn\'t invent a store or pricing — it connects marketing to the real registration that exists now'}</p>
+          <div className="text-center mb-16 md:mb-20">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight text-center">
+              {isArabic ? (
+                <>رحلة قصيرة من<br /><span className="text-transparent bg-clip-text bg-gradient-to-l from-[#FF6B35] to-[#E84545]">الصفحة العامة</span><br />إلى مساحة العمل</>
+              ) : (
+                <>A short journey from<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B35] to-[#E84545]">the public page</span><br />to the workspace</>
+              )}
+            </h2>
+            <p className="text-center text-[#8B8B9A] max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
+              {isArabic 
+                ? 'هذه النسخة لا تخترع متجراً أو أسعاراً، هي تربط التسويق بالتسجيل الحقيقي الموجود الآن' 
+                : 'This version doesn\'t invent a store or pricing — it connects marketing to the real registration that exists now'}
+            </p>
           </div>
         </Reveal>
-        <div className="journey-map-timeline">
-          {steps.map((step, i) => (
-            <Reveal key={step.num} delay={i * 100}>
-              <div className="journey-map-step">
-                <div className="journey-map-step-indicator">
-                  <span className="journey-map-dot">{step.num}</span>
-                  {i < steps.length - 1 && <div className="journey-map-line" />}
-                </div>
-                <div className="journey-map-step-content">
-                  <h3>{step.title}</h3>
-                  <p>{step.desc}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
+
+        {/* Tree Timeline */}
+        <div className="relative pb-12">
+          {/* Desktop Central Line */}
+          <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-1 bg-white/[0.05] -translate-x-1/2 rounded-full" />
+          <motion.div 
+            className="hidden md:block absolute top-0 left-1/2 w-1 bg-gradient-to-b from-[#FF6B35] via-[#E84545] to-[#FF6B35] -translate-x-1/2 rounded-full z-10"
+            style={{ height: lineHeight }}
+          />
+
+          {/* Mobile Side Line */}
+          <div className={`md:hidden absolute top-0 bottom-0 w-1 bg-white/[0.05] rounded-full z-0 ${dir === 'rtl' ? 'right-[22px]' : 'left-[22px]'}`} />
+          <motion.div 
+            className={`md:hidden absolute top-0 w-1 bg-gradient-to-b from-[#FF6B35] to-[#E84545] rounded-full z-10 ${dir === 'rtl' ? 'right-[22px]' : 'left-[22px]'}`}
+            style={{ height: lineHeight }}
+          />
+
+          <div className="flex flex-col relative z-20 pt-8">
+            {steps.map((step, i) => (
+              <BranchingStep key={step.num} step={step} index={i} dir={dir} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
