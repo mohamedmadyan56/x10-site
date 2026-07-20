@@ -9,6 +9,7 @@ import NeonJourney3D from '@/components/NeonJourney3D';
 import UnifiedBaseSection from '@/components/UnifiedBaseSection';
 import BilingualSection from '@/components/BilingualSection';
 import CTABanner from '@/components/CTABanner';
+import InteractiveJourneySection from '@/components/InteractiveJourneySection';
 
 // ─────────────────────────── Locale Context ───────────────────────────
 type Locale = 'ar' | 'en';
@@ -340,15 +341,75 @@ function ImageStack({ progress, isArabic }: { progress: MotionValue<number>; isA
 function ExpItem({ item, index, scrollYProgress }: { item: typeof expItemsEn[number]; index: number; scrollYProgress: MotionValue<number> }) {
   const start = index * 0.25;
   const end = (index + 1) * 0.25;
-  const opacity = useTransform(scrollYProgress, [Math.max(0, start - 0.1), start, end, Math.min(1, end + 0.1)], [0.3, 1, 1, 0.3]);
+  const opacity = useTransform(scrollYProgress, [Math.max(0, start - 0.1), start, end, Math.min(1, end + 0.1)], [0.5, 1, 1, 0.5]);
+  const scale = useTransform(scrollYProgress, [Math.max(0, start - 0.05), start, end, Math.min(1, end + 0.05)], [0.95, 1, 1, 0.95]);
+  
+  // Alternate between coral and cyan colors
+  const isCoralAccent = index % 2 === 0;
+  const accentColor = isCoralAccent ? 'var(--coral)' : 'var(--cyan)';
+  const accentBg = isCoralAccent ? 'rgba(240,138,112,0.15)' : 'rgba(16,214,228,0.12)';
+  const accentBorder = isCoralAccent ? 'rgba(240,138,112,0.25)' : 'rgba(16,214,228,0.2)';
+  const hoverBorder = isCoralAccent ? 'rgba(240,138,112,0.4)' : 'rgba(16,214,228,0.35)';
+  const activeBg = isCoralAccent ? 'linear-gradient(160deg, rgba(240,138,112,0.08), rgba(41,42,44,0.4))' : 'linear-gradient(160deg, rgba(16,214,228,0.08), rgba(41,42,44,0.4))';
+  const inactiveBg = 'linear-gradient(160deg, rgba(41,42,44,0.25), rgba(20,22,26,0.35))';
 
   return (
-    <motion.div className="exp-item" style={{ opacity }}>
+    <motion.div 
+      className="exp-item" 
+      style={{ 
+        opacity,
+        scale,
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 20,
+        padding: '26px 28px',
+        transition: 'border-color 0.3s ease, background 0.3s ease, transform 0.3s ease',
+        cursor: 'default',
+        background: inactiveBg,
+      }}
+      whileHover={{
+        y: -4,
+        transition: { duration: 0.2 }
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLDivElement).style.borderColor = hoverBorder;
+        (e.currentTarget as HTMLDivElement).style.background = activeBg;
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.08)';
+        (e.currentTarget as HTMLDivElement).style.background = inactiveBg;
+      }}
+    >
       <div className="exp-item-header">
-        <div className="exp-item-icon">{item.icon}</div>
-        <h4>{item.title}</h4>
+        <div 
+          className="exp-item-icon" 
+          style={{
+            width: 42,
+            height: 42,
+            borderRadius: 12,
+            display: 'grid',
+            placeItems: 'center',
+            background: accentBg,
+            color: accentColor,
+            border: `1px solid ${accentBorder}`,
+            flexShrink: 0,
+            boxShadow: `0 4px 12px ${isCoralAccent ? 'rgba(240,138,112,0.15)' : 'rgba(16,214,228,0.12)'}`,
+          }}
+        >
+          {item.icon}
+        </div>
+        <h4 style={{ fontSize: '1.15rem', fontWeight: 900, color: 'var(--text)' }}>{item.title}</h4>
       </div>
-      <p>{item.desc}</p>
+      <p 
+        style={{
+          color: 'var(--muted)',
+          fontSize: '0.95rem',
+          fontWeight: 500,
+          lineHeight: 1.75,
+          paddingInlineStart: 56,
+        }}
+      >
+        {item.desc}
+      </p>
     </motion.div>
   );
 }
@@ -366,8 +427,26 @@ function ExperienceSection() {
   return (
     <section id="experience" ref={sectionRef} dir={dir} style={{ height: '400vh', position: 'relative' }}>
       <div style={{ position: 'sticky', top: 0, height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden' }}>
-        <div className="exp-stage" style={{ padding: '60px 32px' }}>
-          <div className="exp-shell">
+        <div 
+          style={{ 
+            padding: '60px 32px',
+            background: 'var(--panel)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          {/* Background decoration - same as InteractiveJourneySection */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              background:
+                'radial-gradient(ellipse at 70% 20%, rgba(16,214,228,0.06), transparent 50%), radial-gradient(ellipse at 30% 80%, rgba(240,138,112,0.05), transparent 50%)',
+            }}
+          />
+
+          <div className="exp-shell" style={{ position: 'relative', zIndex: 1 }}>
             <Reveal>
               <div className="exp-head">
                 <span className="exp-label">{isArabic ? 'التجربة' : 'Experience'}</span>
@@ -376,7 +455,17 @@ function ExperienceSection() {
               </div>
             </Reveal>
             <div className="exp-grid">
-              <div className="exp-visual overflow-hidden relative p-4" style={{ width: '100%', aspectRatio: '1.34' }}>
+              <div 
+                className="exp-visual overflow-hidden relative p-4" 
+                style={{ 
+                  width: '100%', 
+                  aspectRatio: '1.34',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 28,
+                  background: 'linear-gradient(160deg, rgba(41,42,44,0.45), rgba(20,22,26,0.55))',
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.04), 0 20px 60px rgba(0,0,0,0.25)',
+                }}
+              >
                 <div id="image-target" style={{ width: '100%', height: '100%' }}>
                   <ImageStack progress={scrollYProgress} isArabic={isArabic} />
                 </div>
@@ -534,7 +623,7 @@ export default function HomePage() {
           <GlobalScrollImage />
           <HeroSection />
           <ExperienceSection />
-          <JourneyMapSection />
+          <InteractiveJourneySection />
           <UnifiedBaseSection />
           <BilingualSection />
           <CTABanner />
