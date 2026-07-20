@@ -160,19 +160,45 @@ export default function BilingualSection() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            style={{ order: isArabic ? 1 : 2 }}
+            style={{ order: isArabic ? 1 : 2, position: 'relative' }}
             className="max-lg:!order-1"
           >
+            {/* Background Glow */}
             <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+              animate={{ 
+                scale: [1, 1.1, 1],
+                opacity: [0.3, 0.5, 0.3],
+                rotate: [0, 90, 0]
+              }}
+              transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
               style={{
-                border: '1px solid rgba(255,255,255,0.1)',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                width: '120%',
+                height: '120%',
+                transform: 'translate(-50%, -50%)',
+                background: 'conic-gradient(from 0deg at 50% 50%, rgba(240,138,112,0.25), rgba(16,214,228,0.25), rgba(240,138,112,0.25))',
+                filter: 'blur(70px)',
+                zIndex: 0,
+                borderRadius: '50%',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Main Window */}
+            <motion.div
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              style={{
+                position: 'relative',
+                zIndex: 1,
+                border: '1px solid rgba(255,255,255,0.15)',
                 borderRadius: 24,
-                background:
-                  'linear-gradient(160deg, rgba(41,42,44,0.6), rgba(20,22,26,0.7))',
-                boxShadow:
-                  '0 30px 80px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)',
+                background: 'linear-gradient(145deg, rgba(30, 32, 38, 0.8) 0%, rgba(15, 17, 21, 0.9) 100%)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                boxShadow: '0 40px 100px -20px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.2)',
                 overflow: 'hidden',
               }}
             >
@@ -182,48 +208,34 @@ export default function BilingualSection() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '14px 20px',
-                  borderBottom: '1px solid rgba(255,255,255,0.07)',
-                  background: 'rgba(255,255,255,0.02)',
+                  padding: '16px 24px',
+                  borderBottom: '1px solid rgba(255,255,255,0.08)',
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0))',
                 }}
               >
                 {/* Traffic lights */}
-                <div style={{ display: 'flex', gap: 6 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,95,87,0.7)' }} />
-                  <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(255,189,46,0.7)' }} />
-                  <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'rgba(40,200,64,0.7)' }} />
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#ff5f56', boxShadow: '0 0 12px rgba(255,95,86,0.6)' }} />
+                  <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#ffbd2e', boxShadow: '0 0 12px rgba(255,189,46,0.6)' }} />
+                  <span style={{ width: 12, height: 12, borderRadius: '50%', background: '#27c93f', boxShadow: '0 0 12px rgba(39,201,63,0.6)' }} />
                 </div>
 
-                {/* Language toggle */}
-                <div style={{ display: 'flex', gap: 4 }}>
-                  <span
-                    style={{
-                      padding: '3px 10px',
-                      borderRadius: 8,
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      fontFamily: 'var(--font-en)',
-                      background: 'rgba(240,138,112,0.15)',
-                      color: 'var(--coral)',
-                      border: '1px solid rgba(240,138,112,0.25)',
-                    }}
-                  >
-                    AR
-                  </span>
-                  <span
-                    style={{
-                      padding: '3px 10px',
-                      borderRadius: 8,
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      fontFamily: 'var(--font-en)',
-                      background: 'rgba(255,255,255,0.04)',
-                      color: 'var(--faint)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  >
-                    EN
-                  </span>
+                {/* Simulated URL Bar */}
+                <div style={{ 
+                  flex: 1, 
+                  maxWidth: 240, 
+                  height: 28, 
+                  margin: '0 20px', 
+                  background: 'rgba(0,0,0,0.4)', 
+                  borderRadius: 14, 
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8
+                }}>
+                  <span style={{ width: 10, height: 10, border: '2px solid rgba(255,255,255,0.2)', borderRadius: '50%' }} />
+                  <div style={{ width: 80, height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 3 }} />
                 </div>
 
                 {/* X10 logo chip */}
@@ -232,8 +244,10 @@ export default function BilingualSection() {
                     style={{
                       fontFamily: 'var(--font-en)',
                       fontWeight: 900,
-                      fontSize: '1.1rem',
-                      color: 'var(--coral)',
+                      fontSize: '1.2rem',
+                      background: 'linear-gradient(135deg, var(--coral), #ff6b6b)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
                     }}
                   >
                     X
@@ -247,91 +261,207 @@ export default function BilingualSection() {
                       gap: 2,
                     }}
                   >
-                    <span style={{ display: 'block', background: '#f5f5f5' }} />
-                    <span style={{ display: 'block', background: '#f5f5f5' }} />
-                    <span style={{ display: 'block', background: '#f5f5f5' }} />
+                    <span style={{ display: 'block', background: 'rgba(255,255,255,0.9)', borderRadius: 1 }} />
+                    <span style={{ display: 'block', background: 'rgba(255,255,255,0.9)', borderRadius: 1 }} />
+                    <span style={{ display: 'block', background: 'rgba(255,255,255,0.9)', borderRadius: 1 }} />
                   </div>
                 </div>
               </div>
 
               {/* Mock form content */}
-              <div style={{ padding: '24px 24px 28px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-                {/* Field label */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--muted)' }}>
-                    {isArabic ? 'الإعدادات' : 'Settings'}
-                  </span>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--coral)', fontFamily: 'var(--font-en)' }}>
-                    {isArabic ? 'عربي' : 'Arabic'}
-                  </span>
-                </div>
-
-                {/* Skeleton input rows */}
-                {[0.7, 0.55].map((w, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      height: 38,
-                      borderRadius: 12,
-                      border: '1px solid rgba(255,255,255,0.07)',
-                      background: 'rgba(255,255,255,0.03)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '0 14px',
-                    }}
-                  >
-                    <div
-                      style={{
-                        height: 10,
-                        width: `${w * 100}%`,
-                        borderRadius: 6,
-                        background: 'rgba(255,255,255,0.08)',
-                      }}
-                    />
+              <div style={{ padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: 28 }}>
+                
+                {/* Language Switcher Simulation */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--foreground)' }}>
+                      {isArabic ? 'إعدادات النظام' : 'System Settings'}
+                    </span>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>
+                      {isArabic ? 'التبديل بين اللغات والاتجاهات بسلاسة' : 'Switch languages and directions seamlessly'}
+                    </span>
                   </div>
-                ))}
 
-                {/* Direction indicator row */}
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '12px 14px',
-                    borderRadius: 12,
-                    border: '1px solid rgba(240,138,112,0.15)',
-                    background: 'rgba(240,138,112,0.05)',
-                    marginTop: 4,
-                  }}
-                >
-                  <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--coral)' }}>
-                    {isArabic ? 'اتجاه: يمين → يسار' : 'Direction: Left → Right'}
-                  </span>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ width: 16, height: 16, color: 'var(--coral)', transform: isArabic ? 'scaleX(-1)' : 'none' }}
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
+                  <div style={{ 
+                      display: 'flex', 
+                      background: 'rgba(0,0,0,0.5)', 
+                      borderRadius: 16, 
+                      padding: 6, 
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      position: 'relative',
+                      boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.5)'
+                  }}>
+                      <motion.div
+                          animate={{ 
+                            left: isArabic ? 6 : 'calc(50% - 3px)',
+                            right: isArabic ? 'calc(50% - 3px)' : 6 
+                          }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                          style={{
+                              position: 'absolute',
+                              top: 6,
+                              bottom: 6,
+                              background: 'linear-gradient(135deg, var(--coral), #ff6b6b)',
+                              borderRadius: 10,
+                              boxShadow: '0 4px 15px rgba(240, 138, 112, 0.4)',
+                              zIndex: 0
+                          }}
+                      />
+                      <span style={{ 
+                          padding: '6px 20px', 
+                          position: 'relative', 
+                          zIndex: 1, 
+                          color: isArabic ? '#fff' : 'rgba(255,255,255,0.5)', 
+                          fontWeight: 700,
+                          fontSize: '0.85rem',
+                          transition: 'color 0.3s'
+                      }}>عربي</span>
+                      <span style={{ 
+                          padding: '6px 20px', 
+                          position: 'relative', 
+                          zIndex: 1, 
+                          color: !isArabic ? '#fff' : 'rgba(255,255,255,0.5)', 
+                          fontWeight: 700,
+                          fontFamily: 'var(--font-en)',
+                          fontSize: '0.85rem',
+                          transition: 'color 0.3s'
+                      }}>English</span>
+                  </div>
                 </div>
 
-                {/* Bottom skeleton */}
-                <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-                  <div style={{ height: 36, flex: 1, borderRadius: 10, background: 'var(--coral)', opacity: 0.85 }} />
-                  <div
-                    style={{
-                      height: 36,
-                      flex: 1,
-                      borderRadius: 10,
-                      background: 'rgba(255,255,255,0.05)',
+                {/* Dashboard layout simulation */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2.5fr', gap: 20 }}>
+                    {/* Sidebar skeleton */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                        {[...Array(4)].map((_, i) => (
+                            <div key={i} style={{ 
+                                height: 38, 
+                                borderRadius: 10, 
+                                background: i === 0 ? 'rgba(240, 138, 112, 0.15)' : 'rgba(255,255,255,0.03)',
+                                border: i === 0 ? '1px solid rgba(240, 138, 112, 0.3)' : '1px solid rgba(255,255,255,0.05)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '0 12px',
+                                gap: 12,
+                                transition: 'all 0.3s'
+                            }}>
+                                <div style={{ 
+                                  width: 18, 
+                                  height: 18, 
+                                  borderRadius: 6, 
+                                  background: i === 0 ? 'var(--coral)' : 'rgba(255,255,255,0.15)',
+                                  boxShadow: i === 0 ? '0 0 10px rgba(240, 138, 112, 0.5)' : 'none'
+                                }} />
+                                <div style={{ height: 6, width: i === 0 ? '60%' : '80%', borderRadius: 3, background: i === 0 ? 'var(--coral)' : 'rgba(255,255,255,0.15)' }} />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Main content skeleton */}
+                    <div style={{ 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: 20, 
+                      background: 'rgba(255,255,255,0.02)', 
+                      padding: 24, 
+                      borderRadius: 16, 
                       border: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  />
+                      boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                <div style={{ height: 12, width: 120, borderRadius: 6, background: 'rgba(255,255,255,0.3)' }} />
+                                <div style={{ height: 8, width: 80, borderRadius: 4, background: 'rgba(255,255,255,0.1)' }} />
+                            </div>
+                            <div style={{ display: 'flex', gap: -10 }}>
+                              {[1, 2, 3].map(i => (
+                                <div key={i} style={{ 
+                                  width: 32, 
+                                  height: 32, 
+                                  borderRadius: '50%', 
+                                  background: `linear-gradient(135deg, ${i===1 ? 'var(--coral)' : i===2 ? '#10d6e4' : '#6c5ce7'}, ${i===1 ? '#e84545' : i===2 ? '#0b9ba6' : '#a29bfe'})`,
+                                  border: '2px solid rgba(20,22,26,1)',
+                                  marginLeft: isArabic ? 0 : -10,
+                                  marginRight: isArabic ? -10 : 0,
+                                  zIndex: 4-i,
+                                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)'
+                                }} />
+                              ))}
+                            </div>
+                        </div>
+
+                        {/* Chart simulation */}
+                        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 110, marginTop: 10 }}>
+                            {[30, 60, 45, 90, 65, 85].map((h, i) => (
+                                <motion.div 
+                                    key={i}
+                                    initial={{ height: 0 }}
+                                    whileInView={{ height: `${h}%` }}
+                                    transition={{ duration: 1.2, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                                    style={{ 
+                                        flex: 1, 
+                                        background: `linear-gradient(180deg, var(--coral) 0%, rgba(240,138,112,0.05) 100%)`, 
+                                        borderRadius: '6px 6px 0 0',
+                                        borderTop: '2px solid var(--coral)',
+                                        opacity: 0.9,
+                                        position: 'relative'
+                                    }} 
+                                >
+                                  {h === 90 && (
+                                    <motion.div 
+                                      initial={{ opacity: 0, y: 10 }}
+                                      whileInView={{ opacity: 1, y: -25 }}
+                                      transition={{ delay: 1.5, duration: 0.5 }}
+                                      style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        background: 'var(--coral)',
+                                        padding: '4px 8px',
+                                        borderRadius: 6,
+                                        fontSize: '0.6rem',
+                                        fontWeight: 800,
+                                        color: '#fff',
+                                        boxShadow: '0 4px 10px rgba(240,138,112,0.4)'
+                                      }}
+                                    >
+                                      +90%
+                                    </motion.div>
+                                  )}
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* Data rows */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 10 }}>
+                            {[1, 2].map(i => (
+                                <motion.div 
+                                  key={i}
+                                  initial={{ opacity: 0, y: 10 }}
+                                  whileInView={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: 0.5 + i * 0.1, duration: 0.5 }}
+                                  style={{ 
+                                    display: 'flex', 
+                                    justifyContent: 'space-between', 
+                                    alignItems: 'center',
+                                    padding: '14px 16px', 
+                                    background: 'rgba(255,255,255,0.03)', 
+                                    border: '1px solid rgba(255,255,255,0.05)',
+                                    borderRadius: 10,
+                                    cursor: 'pointer'
+                                  }}
+                                  whileHover={{ background: 'rgba(255,255,255,0.06)' }}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                      <div style={{ width: 8, height: 8, borderRadius: '50%', background: i === 1 ? '#10d6e4' : '#ffbd2e', boxShadow: `0 0 10px ${i === 1 ? 'rgba(16,214,228,0.5)' : 'rgba(255,189,46,0.5)'}` }} />
+                                      <div style={{ height: 8, width: 80, borderRadius: 4, background: 'rgba(255,255,255,0.2)' }} />
+                                    </div>
+                                    <div style={{ height: 8, width: 40, borderRadius: 4, background: 'rgba(255,255,255,0.1)' }} />
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
               </div>
             </motion.div>
