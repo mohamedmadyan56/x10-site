@@ -5,6 +5,10 @@ import {
   useRef, useCallback
 } from 'react';
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
+import NeonJourney3D from '@/components/NeonJourney3D';
+import UnifiedBaseSection from '@/components/UnifiedBaseSection';
+import BilingualSection from '@/components/BilingualSection';
+import CTABanner from '@/components/CTABanner';
 
 // ─────────────────────────── Locale Context ───────────────────────────
 type Locale = 'ar' | 'en';
@@ -145,147 +149,85 @@ function HeroSection() {
 }
 
 // ─────────────────────────── Journey Map Section ───────────────────────────
-const journeyStepsAr = [
-  { num: '1', title: 'يدخل الزائر من الموقع العام', desc: 'صفحة خفيفة قابلة للتعريبة، عربية أولاً، وتدعم الإنجليزية والتيم الداكن' },
-  { num: '2', title: 'ينتقل إلى الداشبورد', desc: 'زر البداية يوجه إلى تطبيق الداشبورد الحالي بدل إنشاء auth مكرر داخل الموقع' },
-  { num: '3', title: 'يتحقق عبر الهاتف', desc: 'تدفق الهاتف OTP والتسجيل يعمل من سطح auth الحالي المتصل بالـ API' },
-  { num: '4', title: 'يختار النشاط النشط', desc: 'بعد الدخول، يتحقق الخادم من عضوية tenant قبل عرض أي مساحة محمية' },
+const mapStepsAr = [
+  { 
+    title: 'دخول الموقع العام', 
+    color: 'coral',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+  },
+  { 
+    title: 'الانتقال للوحة التحكم', 
+    color: 'cyan',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg>
+  },
+  { 
+    title: 'التحقق عبر الهاتف (OTP)', 
+    color: 'coral',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+  },
+  { 
+    title: 'اختيار النشاط النشط', 
+    color: 'cyan',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg>
+  },
 ];
-const journeyStepsEn = [
-  { num: '1', title: 'Visitor enters the public site', desc: 'A lightweight, localizable page — Arabic-first, supporting English and dark theme' },
-  { num: '2', title: 'Redirects to the Dashboard', desc: 'The start button redirects to the existing dashboard app instead of duplicating auth on-site' },
-  { num: '3', title: 'Verifies via phone', desc: 'The phone OTP and registration flow works from the existing auth surface connected to the API' },
-  { num: '4', title: 'Selects the active business', desc: 'After login, the server checks tenant membership before showing any protected workspace' },
+
+const mapStepsEn = [
+  { title: 'Enter Public Site', color: 'coral', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg> },
+  { title: 'Go to Dashboard', color: 'cyan', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" /></svg> },
+  { title: 'Phone Verification (OTP)', color: 'coral', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg> },
+  { title: 'Select Active Business', color: 'cyan', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></svg> },
 ];
-function BranchingStep({ step, index, dir }: { step: typeof journeyStepsAr[0], index: number, dir: 'rtl' | 'ltr' }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 85%", "center 50%"]
-  });
-
-  const isEven = index % 2 === 0;
-
-  const width = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const opacity = useTransform(scrollYProgress, [0.5, 1], [0, 1]);
-  const scale = useTransform(scrollYProgress, [0.5, 1], [0.8, 1]);
-
-  return (
-    <div ref={ref} className="relative w-full mb-12 md:mb-20 flex items-center" dir="ltr">
-      
-      {/* --- Mobile Layout (Stacked) --- */}
-      <div className="md:hidden flex w-full relative z-20" dir={dir}>
-        <div className="w-12 flex flex-col items-center relative shrink-0">
-          <motion.div style={{ scale }} className="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#E84545] flex items-center justify-center font-bold text-white shadow-[0_0_20px_rgba(255,107,53,0.5)] z-20 border-[3px] border-[#0d0d0d]">
-            {step.num}
-          </motion.div>
-        </div>
-        <motion.div style={{ opacity, y: useTransform(scrollYProgress, [0.5, 1], [20, 0]) }} className="flex-1 px-4">
-          <div className="bg-[#1a1a1a] border border-[rgba(255,255,255,0.08)] p-5 rounded-2xl shadow-xl">
-            <h3 className="text-lg font-bold text-white mb-2">{step.title}</h3>
-            <p className="text-[#8B8B9A] text-sm leading-relaxed">{step.desc}</p>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* --- Desktop Layout (Alternating Grid - Forced LTR for structure) --- */}
-      <div className="hidden md:grid grid-cols-2 w-full relative z-20">
-        {isEven ? (
-          <>
-            {/* Column 1: Card on LEFT, aligned to right (center) */}
-            <div className="flex items-center justify-end pr-10">
-              <motion.div style={{ opacity, scale }} className="w-full max-w-md" dir={dir}>
-                <div className="bg-[#1a1a1a] border border-[rgba(255,255,255,0.08)] p-8 rounded-2xl relative shadow-2xl hover:border-[rgba(255,107,53,0.4)] transition-all duration-300">
-                  <div className="absolute top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#E84545] text-white flex items-center justify-center font-black text-2xl shadow-[0_0_20px_rgba(255,107,53,0.5)] z-20 border-4 border-[#0d0d0d] -right-7">
-                    {step.num}
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">{step.title}</h3>
-                  <p className="text-[#8B8B9A] leading-relaxed">{step.desc}</p>
-                </div>
-              </motion.div>
-            </div>
-            {/* Column 2: Branch Line starting from left (center) going right */}
-            <div className="flex items-center justify-start relative">
-              <motion.div className="h-1 bg-gradient-to-r from-[#FF6B35] to-[#E84545]" style={{ width }} />
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Column 1: Branch Line starting from right (center) going left */}
-            <div className="flex items-center justify-end relative">
-              <motion.div className="h-1 bg-gradient-to-l from-[#FF6B35] to-[#E84545]" style={{ width }} />
-            </div>
-            {/* Column 2: Card on RIGHT, aligned to left (center) */}
-            <div className="flex items-center justify-start pl-10">
-              <motion.div style={{ opacity, scale }} className="w-full max-w-md" dir={dir}>
-                <div className="bg-[#1a1a1a] border border-[rgba(255,255,255,0.08)] p-8 rounded-2xl relative shadow-2xl hover:border-[rgba(255,107,53,0.4)] transition-all duration-300">
-                  <div className="absolute top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#E84545] text-white flex items-center justify-center font-black text-2xl shadow-[0_0_20px_rgba(255,107,53,0.5)] z-20 border-4 border-[#0d0d0d] -left-7">
-                    {step.num}
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-white mb-3">{step.title}</h3>
-                  <p className="text-[#8B8B9A] leading-relaxed">{step.desc}</p>
-                </div>
-              </motion.div>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
 
 function JourneyMapSection() {
   const { isArabic, dir } = useLocale();
-  const steps = isArabic ? journeyStepsAr : journeyStepsEn;
-  const containerRef = useRef<HTMLElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start center", "end 80%"]
-  });
-  
-  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const steps = isArabic ? mapStepsAr : mapStepsEn;
+  const colorClasses = {
+    coral: 'bg-[var(--coral)]/10 text-[var(--coral)]',
+    cyan: 'bg-[var(--cyan)]/10 text-[var(--cyan)]'
+  };
 
   return (
-    <section id="journey-map" className="py-16 md:py-24 relative bg-[#0d0d0d] overflow-hidden" dir={dir} ref={containerRef}>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
-        <Reveal>
-          <div className="text-center mb-16 md:mb-20">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 leading-tight text-center">
-              {isArabic ? (
-                <>رحلة قصيرة من<br /><span className="text-transparent bg-clip-text bg-gradient-to-l from-[#FF6B35] to-[#E84545]">الصفحة العامة</span><br />إلى مساحة العمل</>
-              ) : (
-                <>A short journey from<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B35] to-[#E84545]">the public page</span><br />to the workspace</>
-              )}
-            </h2>
-            <p className="text-center text-[#8B8B9A] max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-              {isArabic 
-                ? 'هذه النسخة لا تخترع متجراً أو أسعاراً، هي تربط التسويق بالتسجيل الحقيقي الموجود الآن' 
-                : 'This version doesn\'t invent a store or pricing — it connects marketing to the real registration that exists now'}
-            </p>
+    <section id="journey-map" className="exp-stage" dir={dir}>
+      <div className="exp-shell">
+        <div className="exp-grid items-center">
+          {/* Right Column visually in RTL (Info & Steps) */}
+          <div className="flex flex-col gap-8 md:pe-8">
+            <Reveal>
+              <div className="exp-head !max-w-full !mb-0 text-start">
+                <span className="exp-label">{isArabic ? 'رحلة المستخدم' : 'User Journey'}</span>
+                <h2 className="!text-3xl md:!text-5xl">
+                  {isArabic ? (
+                    <>رحلة قصيرة من<br /><span className="text-transparent bg-clip-text bg-gradient-to-l from-[var(--coral)] to-[#E84545]">الصفحة العامة</span><br />إلى مساحة العمل</>
+                  ) : (
+                    <>A short journey from<br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--coral)] to-[#E84545]">the public page</span><br />to the workspace</>
+                  )}
+                </h2>
+                <p className="!max-w-xl">
+                  {isArabic 
+                    ? 'هذه النسخة تربط التسويق بالتسجيل الحقيقي الموجود الآن — اضغط على أي خطوة لمعرفة المزيد.' 
+                    : 'This version connects marketing to the real registration that exists now — click any step to learn more.'}
+                </p>
+              </div>
+            </Reveal>
+
+            <div className="flex flex-col gap-3">
+              {steps.map((step, i) => (
+                <Reveal key={i} delay={i * 100}>
+                  <button className="flex items-center justify-between w-full px-6 py-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/[0.1] transition-all group">
+                    <span className="text-[15px] font-bold text-gray-300 group-hover:text-white transition-colors text-start">{step.title}</span>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform ${colorClasses[step.color as 'coral' | 'cyan']}`}>
+                      {step.icon}
+                    </div>
+                  </button>
+                </Reveal>
+              ))}
+            </div>
           </div>
-        </Reveal>
 
-        {/* Tree Timeline */}
-        <div className="relative pb-12">
-          {/* Desktop Central Line */}
-          <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-1 bg-white/[0.05] -translate-x-1/2 rounded-full" />
-          <motion.div 
-            className="hidden md:block absolute top-0 left-1/2 w-1 bg-gradient-to-b from-[#FF6B35] via-[#E84545] to-[#FF6B35] -translate-x-1/2 rounded-full z-10"
-            style={{ height: lineHeight }}
-          />
-
-          {/* Mobile Side Line */}
-          <div className={`md:hidden absolute top-0 bottom-0 w-1 bg-white/[0.05] rounded-full z-0 ${dir === 'rtl' ? 'right-[22px]' : 'left-[22px]'}`} />
-          <motion.div 
-            className={`md:hidden absolute top-0 w-1 bg-gradient-to-b from-[#FF6B35] to-[#E84545] rounded-full z-10 ${dir === 'rtl' ? 'right-[22px]' : 'left-[22px]'}`}
-            style={{ height: lineHeight }}
-          />
-
-          <div className="flex flex-col relative z-20 pt-8">
-            {steps.map((step, i) => (
-              <BranchingStep key={step.num} step={step} index={i} dir={dir} />
-            ))}
+          {/* Left Column visually in RTL (3D Canvas) */}
+          <div className="w-full relative h-[400px] md:h-[500px] mb-8 md:mb-0">
+            <NeonJourney3D />
           </div>
         </div>
       </div>
@@ -593,6 +535,9 @@ export default function HomePage() {
           <HeroSection />
           <ExperienceSection />
           <JourneyMapSection />
+          <UnifiedBaseSection />
+          <BilingualSection />
+          <CTABanner />
         </main>
         <FooterSection />
       </ClientLayout>
