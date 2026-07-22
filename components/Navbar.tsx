@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useLocale } from '@/context/LocaleContext';
 
 const linksAr = [
@@ -16,11 +17,22 @@ const linksEn = [
 
 export default function Navbar() {
   const { setLocale, isArabic } = useLocale();
+  const [isScrolled, setIsScrolled] = useState(false);
   const links = isArabic ? linksAr : linksEn;
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="site-header">
-      <nav className="topbar" aria-label="Main navigation">
+    <header className={`site-header ${isScrolled ? 'scrolled' : ''}`}>
+      <nav className={`topbar ${isScrolled ? 'scrolled' : ''}`} aria-label="Main navigation">
         <a href="#" className="x10-logo" aria-label="X10">
           <span className="logo-x">X</span>
           <span className="logo-ten">

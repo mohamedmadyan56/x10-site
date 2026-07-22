@@ -189,15 +189,18 @@ function PhoneMockup({ step, isActive }: { step: any; isActive: boolean }) {
   
   return (
     <motion.div
-      initial={false}
+      initial={{ opacity: 0, scale: 0.92, rotateX: 14 }}
+      whileInView={{ opacity: 1, scale: 1, rotateX: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
       animate={{
         scale: isActive ? 1 : 0.9,
         opacity: isActive ? 1 : 0.6,
       }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
       style={{
         width: 200,
         height: 380,
+        transformStyle: 'preserve-3d',
         background: 'linear-gradient(160deg, rgba(41,42,44,0.9), rgba(20,22,26,0.95))',
         borderRadius: 32,
         border: `2px solid ${isActive ? step.color === 'coral' ? 'var(--coral)' : 'var(--cyan)' : 'rgba(255,255,255,0.1)'}`,
@@ -487,10 +490,10 @@ export default function InteractiveJourneySection() {
           {/* ── Left / Text + Timeline side ── */}
           <div style={{ order: isArabic ? 2 : 1 }} className="max-lg:!order-2">
             <motion.div
-              initial={{ opacity: 0, x: isArabic ? 40 : -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               style={{ marginBottom: 48 }}
             >
               <span className="eyebrow">{isArabic ? 'رحلة المستخدم' : 'User Journey'}</span>
@@ -561,10 +564,10 @@ export default function InteractiveJourneySection() {
                 return (
                   <motion.div
                     key={step.id}
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+                    whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.65, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
                     style={{ display: 'flex', gap: 24, alignItems: 'stretch' }}
                   >
                     {/* Timeline indicator */}
@@ -715,6 +718,7 @@ export default function InteractiveJourneySection() {
               minHeight: 500,
               position: 'sticky',
               top: 140,
+              perspective: '1000px',
             }}
             className="max-lg:!order-1 max-lg:!position-static"
           >

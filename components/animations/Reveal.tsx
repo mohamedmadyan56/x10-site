@@ -20,12 +20,10 @@ export default function Reveal({ children, delay = 0, className = '' }: RevealPr
         if (entry.isIntersecting) {
           el.style.transitionDelay = `${delay}ms`;
           el.classList.add('revealed');
-        } else {
-          el.style.transitionDelay = '0ms';
-          el.classList.remove('revealed');
+          io.unobserve(el);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.12 }
     );
 
     io.observe(el);
