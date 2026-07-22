@@ -63,8 +63,9 @@ export default function UnifiedBaseSection() {
           
           {/* Card 1: Unified Design (Spans 2 columns) */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            whileHover={{ y: -8 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             style={{
@@ -75,12 +76,21 @@ export default function UnifiedBaseSection() {
               overflow: 'hidden',
               background: 'linear-gradient(145deg, rgba(30, 32, 38, 0.7) 0%, rgba(15, 17, 21, 0.9) 100%)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(240,138,112,0.15)',
+              border: '1px solid rgba(240,138,112,0.2)',
               boxShadow: '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
               minHeight: '420px',
+              transition: 'border-color 0.35s ease, box-shadow 0.35s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(240, 138, 112, 0.5)';
+              e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(240, 138, 112, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(240,138,112,0.2)';
+              e.currentTarget.style.boxShadow = '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)';
             }}
             className="max-lg:!col-span-1"
           >
@@ -108,8 +118,9 @@ export default function UnifiedBaseSection() {
 
           {/* Card 2: Performance (Spans 1 column) */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            whileHover={{ y: -8 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
             style={{
@@ -120,11 +131,20 @@ export default function UnifiedBaseSection() {
               overflow: 'hidden',
               background: 'linear-gradient(145deg, rgba(30, 32, 38, 0.7) 0%, rgba(15, 17, 21, 0.9) 100%)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(16,214,228,0.15)',
+              border: '1px solid rgba(16,214,228,0.2)',
               boxShadow: '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)',
               display: 'flex',
               flexDirection: 'column',
               minHeight: '420px',
+              transition: 'border-color 0.35s ease, box-shadow 0.35s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(16, 214, 228, 0.5)';
+              e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 214, 228, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(16,214,228,0.2)';
+              e.currentTarget.style.boxShadow = '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)';
             }}
           >
             <div style={{ position: 'absolute', top: 0, right: 0, width: '100%', height: '100%', background: 'radial-gradient(circle at bottom left, rgba(16,214,228,0.1), transparent 70%)', pointerEvents: 'none' }} />
@@ -160,8 +180,9 @@ export default function UnifiedBaseSection() {
 
           {/* Card 3: Transparency (Spans 3 columns, Horizontal) */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            whileHover={{ y: -8 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             style={{
@@ -172,12 +193,21 @@ export default function UnifiedBaseSection() {
               overflow: 'hidden',
               background: 'linear-gradient(145deg, rgba(30, 32, 38, 0.7) 0%, rgba(15, 17, 21, 0.9) 100%)',
               backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(157,78,221,0.15)',
+              border: '1px solid rgba(157,78,221,0.2)',
               boxShadow: '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)',
               display: 'flex',
               alignItems: 'center',
               gap: '64px',
               minHeight: '280px',
+              transition: 'border-color 0.35s ease, box-shadow 0.35s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(157, 78, 221, 0.5)';
+              e.currentTarget.style.boxShadow = '0 25px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(157, 78, 221, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(157,78,221,0.2)';
+              e.currentTarget.style.boxShadow = '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)';
             }}
             className="max-lg:!col-span-1 max-lg:!flex-col max-lg:!items-start max-lg:!gap-8"
           >
