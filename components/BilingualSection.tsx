@@ -53,10 +53,10 @@ export default function BilingualSection() {
         >
           {/* ── Left / Text side ── */}
           <motion.div
-            initial={{ opacity: 0, x: isArabic ? 40 : -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             style={{ order: isArabic ? 2 : 1 }}
             className="max-lg:!order-2"
           >
@@ -123,10 +123,10 @@ export default function BilingualSection() {
               {bullets.map((bullet, i) => (
                 <motion.li
                   key={i}
-                  initial={{ opacity: 0, x: isArabic ? 16 : -16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+                  whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.2 + i * 0.12, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ delay: 0.25 + i * 0.12, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   style={{
                     display: 'flex',
                     alignItems: 'flex-start',
@@ -156,10 +156,10 @@ export default function BilingualSection() {
 
           {/* ── Right / Mockup side ── */}
           <motion.div
-            initial={{ opacity: 0, x: isArabic ? -40 : 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 40, filter: 'blur(12px)' }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.85, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             style={{ order: isArabic ? 1 : 2, position: 'relative' }}
             className="max-lg:!order-1"
           >
