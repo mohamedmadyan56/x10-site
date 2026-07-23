@@ -37,7 +37,7 @@ export default function BilingualSection() {
           inset: 0,
           pointerEvents: 'none',
           background:
-            'radial-gradient(ellipse at 10% 50%, rgba(240,138,112,0.06), transparent 50%), radial-gradient(ellipse at 90% 20%, rgba(16,214,228,0.05), transparent 50%)',
+            'radial-gradient(ellipse at 10% 50%, rgba(231, 136, 113,0.06), transparent 50%), radial-gradient(ellipse at 90% 20%, rgba(15, 165, 184,0.05), transparent 50%)',
         }}
       />
 
@@ -178,7 +178,7 @@ export default function BilingualSection() {
                 width: '120%',
                 height: '120%',
                 transform: 'translate(-50%, -50%)',
-                background: 'conic-gradient(from 0deg at 50% 50%, rgba(240,138,112,0.25), rgba(16,214,228,0.25), rgba(240,138,112,0.25))',
+                background: 'conic-gradient(from 0deg at 50% 50%, rgba(231, 136, 113,0.25), rgba(15, 165, 184,0.25), rgba(231, 136, 113,0.25))',
                 filter: 'blur(70px)',
                 zIndex: 0,
                 borderRadius: '50%',
@@ -303,7 +303,7 @@ export default function BilingualSection() {
                               bottom: 6,
                               background: 'linear-gradient(135deg, var(--coral), #ff6b6b)',
                               borderRadius: 10,
-                              boxShadow: '0 4px 15px rgba(240, 138, 112, 0.4)',
+                              boxShadow: '0 4px 15px rgba(231, 136, 113, 0.4)',
                               zIndex: 0
                           }}
                       />
@@ -337,8 +337,8 @@ export default function BilingualSection() {
                             <div key={i} style={{ 
                                 height: 38, 
                                 borderRadius: 10, 
-                                background: i === 0 ? 'rgba(240, 138, 112, 0.15)' : 'rgba(255,255,255,0.03)',
-                                border: i === 0 ? '1px solid rgba(240, 138, 112, 0.3)' : '1px solid rgba(255,255,255,0.05)',
+                                background: i === 0 ? 'rgba(231, 136, 113, 0.15)' : 'rgba(255,255,255,0.03)',
+                                border: i === 0 ? '1px solid rgba(231, 136, 113, 0.3)' : '1px solid rgba(255,255,255,0.05)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 padding: '0 12px',
@@ -350,7 +350,7 @@ export default function BilingualSection() {
                                   height: 18, 
                                   borderRadius: 6, 
                                   background: i === 0 ? 'var(--coral)' : 'rgba(255,255,255,0.15)',
-                                  boxShadow: i === 0 ? '0 0 10px rgba(240, 138, 112, 0.5)' : 'none'
+                                  boxShadow: i === 0 ? '0 0 10px rgba(231, 136, 113, 0.5)' : 'none'
                                 }} />
                                 <div style={{ height: 6, width: i === 0 ? '60%' : '80%', borderRadius: 3, background: i === 0 ? 'var(--coral)' : 'rgba(255,255,255,0.15)' }} />
                             </div>
@@ -379,7 +379,7 @@ export default function BilingualSection() {
                                   width: 32, 
                                   height: 32, 
                                   borderRadius: '50%', 
-                                  background: `linear-gradient(135deg, ${i===1 ? 'var(--coral)' : i===2 ? '#10d6e4' : '#6c5ce7'}, ${i===1 ? '#e84545' : i===2 ? '#0b9ba6' : '#a29bfe'})`,
+                                  background: `linear-gradient(135deg, ${i===1 ? 'var(--coral)' : i===2 ? '#0fa5b8' : '#6c5ce7'}, ${i===1 ? '#e84545' : i===2 ? '#0b9ba6' : '#a29bfe'})`,
                                   border: '2px solid rgba(20,22,26,1)',
                                   marginLeft: isArabic ? 0 : -10,
                                   marginRight: isArabic ? -10 : 0,
@@ -400,7 +400,7 @@ export default function BilingualSection() {
                                     transition={{ duration: 1.2, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                                     style={{ 
                                         flex: 1, 
-                                        background: `linear-gradient(180deg, var(--coral) 0%, rgba(240,138,112,0.05) 100%)`, 
+                                        background: `linear-gradient(180deg, var(--coral) 0%, rgba(231, 136, 113,0.05) 100%)`, 
                                         borderRadius: '6px 6px 0 0',
                                         borderTop: '2px solid var(--coral)',
                                         opacity: 0.9,
@@ -423,7 +423,7 @@ export default function BilingualSection() {
                                         fontSize: '0.6rem',
                                         fontWeight: 800,
                                         color: '#fff',
-                                        boxShadow: '0 4px 10px rgba(240,138,112,0.4)'
+                                        boxShadow: '0 4px 10px rgba(231, 136, 113,0.4)'
                                       }}
                                     >
                                       +90%
@@ -454,7 +454,7 @@ export default function BilingualSection() {
                                   whileHover={{ background: 'rgba(255,255,255,0.06)' }}
                                 >
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                      <div style={{ width: 8, height: 8, borderRadius: '50%', background: i === 1 ? '#10d6e4' : '#ffbd2e', boxShadow: `0 0 10px ${i === 1 ? 'rgba(16,214,228,0.5)' : 'rgba(255,189,46,0.5)'}` }} />
+                                      <div style={{ width: 8, height: 8, borderRadius: '50%', background: i === 1 ? '#0fa5b8' : '#ffbd2e', boxShadow: `0 0 10px ${i === 1 ? 'rgba(15, 165, 184,0.5)' : 'rgba(255,189,46,0.5)'}` }} />
                                       <div style={{ height: 8, width: 80, borderRadius: 4, background: 'rgba(255,255,255,0.2)' }} />
                                     </div>
                                     <div style={{ height: 8, width: 40, borderRadius: 4, background: 'rgba(255,255,255,0.1)' }} />

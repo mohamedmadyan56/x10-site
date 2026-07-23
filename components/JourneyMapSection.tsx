@@ -62,12 +62,12 @@ export default function JourneyMapSection() {
         <motion.div 
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ position: 'absolute', top: '10%', right: '10%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(240,138,112,0.1), transparent 60%)', filter: 'blur(80px)' }}
+          style={{ position: 'absolute', top: '10%', right: '10%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(231, 136, 113,0.1), transparent 60%)', filter: 'blur(80px)' }}
         />
         <motion.div 
           animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          style={{ position: 'absolute', bottom: '10%', left: '10%', width: '50vw', height: '50vw', background: 'radial-gradient(circle, rgba(16,214,228,0.1), transparent 60%)', filter: 'blur(100px)' }}
+          style={{ position: 'absolute', bottom: '10%', left: '10%', width: '50vw', height: '50vw', background: 'radial-gradient(circle, rgba(15, 165, 184,0.1), transparent 60%)', filter: 'blur(100px)' }}
         />
       </div>
 
@@ -109,7 +109,7 @@ export default function JourneyMapSection() {
                   }}
                 >
                   {isActive && (
-                    <motion.div layoutId="activeGlow" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 0% 0%, rgba(240,138,112,0.15), transparent 70%)' }} />
+                    <motion.div layoutId="activeGlow" style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 0% 0%, rgba(231, 136, 113,0.15), transparent 70%)' }} />
                   )}
                   <div style={{ display: 'flex', gap: '24px', position: 'relative', zIndex: 1 }}>
                     <div style={{ 
@@ -200,7 +200,7 @@ export default function JourneyMapSection() {
                         <motion.div 
                           animate={{ scale: [1, 1.05, 1] }}
                           transition={{ duration: 2, repeat: Infinity }}
-                          style={{ width: '120px', height: '40px', background: 'var(--coral)', borderRadius: '20px', marginTop: '16px', boxShadow: '0 10px 20px rgba(240,138,112,0.3)' }} 
+                          style={{ width: '120px', height: '40px', background: 'var(--coral)', borderRadius: '20px', marginTop: '16px', boxShadow: '0 10px 20px rgba(231, 136, 113,0.3)' }} 
                         />
                       </div>
                     </motion.div>
@@ -265,7 +265,7 @@ export default function JourneyMapSection() {
                           </motion.div>
                         ))}
                       </div>
-                      <div style={{ width: '200px', height: '48px', background: 'linear-gradient(135deg, var(--coral), #ff6b6b)', borderRadius: '24px', boxShadow: '0 10px 20px rgba(240,138,112,0.3)' }} />
+                      <div style={{ width: '200px', height: '48px', background: 'linear-gradient(135deg, var(--coral), #ff6b6b)', borderRadius: '24px', boxShadow: '0 10px 20px rgba(231, 136, 113,0.3)' }} />
                     </motion.div>
                   )}
 
@@ -291,7 +291,7 @@ export default function JourneyMapSection() {
                             whileHover={{ scale: 1.02 }}
                             style={{ 
                               padding: '20px', 
-                              background: i === 1 ? 'rgba(16,214,228,0.1)' : 'rgba(255,255,255,0.03)', 
+                              background: i === 1 ? 'rgba(15, 165, 184,0.1)' : 'rgba(255,255,255,0.03)', 
                               border: `1px solid ${i === 1 ? 'var(--cyan)' : 'rgba(255,255,255,0.05)'}`, 
                               borderRadius: '16px',
                               display: 'flex',

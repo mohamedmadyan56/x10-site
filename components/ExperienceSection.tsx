@@ -7,8 +7,8 @@ import Reveal from '@/components/animations/Reveal';
 
 function DashboardPreview({ isArabic }: { isArabic: boolean }) {
   return (
-    <div className="w-full h-full rounded-2xl overflow-hidden border border-[var(--cyan)]/10 bg-gradient-to-br from-[#11161f] to-[#0a0e14] shadow-[0_0_60px_rgba(16,214,228,0.08)] flex flex-col relative">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(16,214,228,0.04),_transparent_70%)] pointer-events-none" />
+    <div className="w-full h-full rounded-2xl overflow-hidden border border-[var(--cyan)]/10 bg-gradient-to-br from-[#11161f] to-[#0a0e14] shadow-[0_0_60px_rgba(15, 165, 184,0.08)] flex flex-col relative">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(15, 165, 184,0.04),_transparent_70%)] pointer-events-none" />
 
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--cyan)]/8 bg-[var(--cyan)]/[0.02]">
         <div className="flex items-center gap-2.5">
@@ -35,7 +35,7 @@ function DashboardPreview({ isArabic }: { isArabic: boolean }) {
             <div
               key={i}
               className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${i === 0
-                ? 'bg-[var(--coral)]/20 text-[var(--coral)] shadow-[0_0_12px_rgba(240,138,112,0.2)]'
+                ? 'bg-[var(--coral)]/20 text-[var(--coral)] shadow-[0_0_12px_rgba(231, 136, 113,0.2)]'
                 : 'text-gray-600 hover:text-gray-400 hover:bg-white/5'
                 }`}
             >
@@ -118,8 +118,8 @@ export default function ExperienceSection() {
   return (
     <section id="experience" className="exp-stage" dir={dir} ref={sectionRef}>
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse,_rgba(16,214,228,0.06),_transparent_70%)]" />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-[radial-gradient(ellipse,_rgba(240,138,112,0.05),_transparent_70%)]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse,_rgba(15, 165, 184,0.06),_transparent_70%)]" />
+        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] bg-[radial-gradient(ellipse,_rgba(231, 136, 113,0.05),_transparent_70%)]" />
         <motion.div className="absolute top-[20%] left-[10%] w-2 h-2 rounded-full bg-[var(--cyan)]/30" animate={{ y: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} />
         <motion.div className="absolute top-[60%] right-[15%] w-3 h-3 rounded-full bg-[var(--coral)]/20" animate={{ y: [0, 15, 0], opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }} />
         <motion.div className="absolute top-[40%] left-[80%] w-1.5 h-1.5 rounded-full bg-[var(--cyan)]/25" animate={{ x: [0, -10, 0], opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }} />
@@ -153,7 +153,7 @@ export default function ExperienceSection() {
                   initial={{ opacity: 0, x: isArabic ? 40 : -40 }} animate={isVisible ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.4 + i * 0.1 }} whileHover={{ x: isArabic ? -4 : 4 }}>
                   <div className="exp-item-header">
-                    <div className="exp-item-icon group-hover:shadow-[0_0_20px_rgba(16,214,228,0.3)] group-hover:border-[var(--cyan)]/30 transition-all duration-300">
+                    <div className="exp-item-icon group-hover:shadow-[0_0_20px_rgba(15, 165, 184,0.3)] group-hover:border-[var(--cyan)]/30 transition-all duration-300">
                       {item.icon}
                     </div>
                     <h4>{item.title}</h4>

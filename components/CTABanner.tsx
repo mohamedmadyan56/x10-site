@@ -14,7 +14,7 @@ export default function CTABanner() {
         position: 'relative',
         overflow: 'hidden',
         padding: '80px 32px 100px',
-        background: 'var(--bg)',
+        background: 'var(--bg-deep)',
       }}
     >
       <div className="wrap">
@@ -29,7 +29,7 @@ export default function CTABanner() {
             textAlign: 'center',
             borderRadius: 32,
             padding: '72px 40px',
-            border: '1px solid rgba(240,138,112,0.2)',
+            border: '1px solid rgba(231, 136, 113,0.2)',
             background:
               'linear-gradient(160deg, rgba(41,42,44,0.6) 0%, rgba(20,22,26,0.8) 100%)',
             boxShadow:
@@ -42,7 +42,7 @@ export default function CTABanner() {
             style={{
               width: 520,
               height: 320,
-              background: 'radial-gradient(circle, rgba(240,138,112,0.18), transparent 70%)',
+              background: 'radial-gradient(circle, rgba(231, 136, 113,0.18), transparent 70%)',
               top: -120,
               left: '50%',
               transform: 'translateX(-50%)',
