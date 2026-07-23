@@ -360,6 +360,8 @@ function ExperienceSection() {
 
 function GlobalScrollImage() {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const imgFrameRef = useRef<HTMLDivElement>(null);
+  const colFrameRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
 
   // ابدأ دايماً من الهيرو بعد الـ refresh (ألغِ استرجاع المتصفح لموضع السكرول)
@@ -378,27 +380,72 @@ function GlobalScrollImage() {
 
     const apply = () => {
       raf = 0;
-      const startEl = document.getElementById('hero-image-source');
-      const endEl = document.getElementById('image-target');
-      const sectionEl = document.getElementById('experience');
-      if (!startEl || !endEl || !sectionEl) return;
+      const heroTarget = document.getElementById('hero-image-source');
+      const expTarget = document.getElementById('image-target');
+      const journeyTarget = document.getElementById('journey-center-target');
+      const expSection = document.getElementById('experience');
+      const journeySection = document.getElementById('journey-map');
 
-      // مسافة السكرول لحد ما السكشن يثبت في أعلى الشاشة
-      const finishScroll = Math.max(1, (sectionEl as HTMLElement).offsetTop);
-      const p = Math.min(1, Math.max(0, window.scrollY / finishScroll));
+      if (!heroTarget || !expTarget || !expSection || !journeyTarget || !journeySection) return;
 
-      // قياس حي كل فريم — يلاحق موضع الـ sticky بدل قياس ثابت وقت التحميل
-      const s = startEl.getBoundingClientRect();
-      const e = endEl.getBoundingClientRect();
+      const scrollY = window.scrollY;
+      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-      const lerp = (a: number, b: number) => a + (b - a) * p;
-      wrap.style.top = `${lerp(s.top, e.top)}px`;
-      wrap.style.left = `${lerp(s.left, e.left)}px`;
-      wrap.style.width = `${lerp(s.width, e.width)}px`;
-      wrap.style.height = `${lerp(s.height, e.height)}px`;
+      // Phase 1: Hero -> Experience
+      const finishScroll1 = Math.max(1, expSection.offsetTop);
+      const p1 = Math.min(1, Math.max(0, scrollY / finishScroll1));
 
-      // اختفاء ناعم في آخر جزء من النزول (crossfade مع صورة البوكس)
-      wrap.style.opacity = p >= 1 ? '0' : String(Math.min(1, (1 - p) / 0.06));
+      // Phase 3: Experience -> Journey
+      const scrollStart2 = expSection.offsetTop + expSection.offsetHeight - window.innerHeight;
+      const scrollEnd2 = journeySection.offsetTop;
+      const diff2 = Math.max(1, scrollEnd2 - scrollStart2);
+      const p2 = Math.min(1, Math.max(0, (scrollY - scrollStart2) / diff2));
+
+      const rHero = heroTarget.getBoundingClientRect();
+      const rExp = expTarget.getBoundingClientRect();
+      const rJourney = journeyTarget.getBoundingClientRect();
+
+      if (scrollY < finishScroll1) {
+        // Phase 1 active
+        wrap.style.top = `${lerp(rHero.top, rExp.top, p1)}px`;
+        wrap.style.left = `${lerp(rHero.left, rExp.left, p1)}px`;
+        wrap.style.width = `${lerp(rHero.width, rExp.width, p1)}px`;
+        wrap.style.height = `${lerp(rHero.height, rExp.height, p1)}px`;
+
+        // Fade out slightly before reaching 1 to crossfade with the actual element
+        wrap.style.opacity = p1 >= 1 ? '0' : String(Math.min(1, (1 - p1) / 0.06));
+
+        if (imgFrameRef.current) {
+          imgFrameRef.current.style.filter = 'none';
+          imgFrameRef.current.style.opacity = '1';
+        }
+        if (colFrameRef.current) {
+          colFrameRef.current.style.opacity = '0';
+        }
+      } 
+      else if (scrollY >= scrollStart2 && p2 < 1) {
+        // Phase 3 active: Experience to Journey Center Column
+        wrap.style.top = `${lerp(rExp.top, rJourney.top, p2)}px`;
+        wrap.style.left = `${lerp(rExp.left, rJourney.left, p2)}px`;
+        wrap.style.width = `${lerp(rExp.width, rJourney.width, p2)}px`;
+        wrap.style.height = `${lerp(rExp.height, rJourney.height, p2)}px`;
+
+        wrap.style.opacity = '1';
+
+        if (imgFrameRef.current) {
+          imgFrameRef.current.style.filter = 'hue-rotate(180deg) invert(1)';
+          // Fade out X image as it morphs to column
+          imgFrameRef.current.style.opacity = String(Math.max(0, 1 - p2 * 1.5));
+        }
+        if (colFrameRef.current) {
+          // Fade in the column styles
+          colFrameRef.current.style.opacity = String(p2);
+        }
+      } 
+      else {
+        // Phase 2 (Inside Experience Section) or fully inside Journey Section (p2 >= 1)
+        wrap.style.opacity = '0';
+      }
     };
 
     const onScroll = () => {
@@ -435,7 +482,17 @@ function GlobalScrollImage() {
         willChange: 'top, left, width, height, opacity',
       }}
     >
-      <div className="x-image-frame" style={{ width: '100%', height: '100%', aspectRatio: 'auto' }}>
+      <div 
+        ref={colFrameRef}
+        style={{
+          position: 'absolute', inset: 0, opacity: 0,
+          border: '1px solid rgba(255, 255, 255, 0.24)',
+          borderRadius: '28px',
+          background: 'linear-gradient(180deg, rgba(88, 89, 97, 0.82), rgba(58, 57, 63, 0.82))',
+          boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 22px 56px rgba(0, 0, 0, 0.34), 0 0 46px rgba(15, 165, 184, 0.08)'
+        }}
+      />
+      <div ref={imgFrameRef} className="x-image-frame" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', aspectRatio: 'auto' }}>
         <img src="/generated-image-7e678040-c54d-4cfc-9407-a606acdc5521.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
     </motion.div>

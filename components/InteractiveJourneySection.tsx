@@ -135,6 +135,7 @@ function CenterRail({ progress }: { progress: MotionValue<number> }) {
 
   return (
     <motion.div 
+      id="journey-center-target"
       className="journey-center" 
       aria-hidden="true"
       style={{
