@@ -1,285 +1,317 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { CSSProperties, ReactNode } from 'react';
 import { useLocale } from '@/context/LocaleContext';
+
+type Plan = {
+  name: string;
+  tag?: string;
+  price: string;
+  audience: string;
+  tagline: string;
+  cta: string;
+  features: string[];
+  accent: string;
+  glow: string;
+  featured?: boolean;
+};
+
+const plansAr: Plan[] = [
+  {
+    name: 'Starter',
+    price: '149',
+    audience: 'للأسر المنتجة والمتاجر الصغيرة',
+    tagline: 'تشغيل بسيط من أول يوم',
+    cta: 'ابدأ الآن',
+    features: [
+      'نقطة بيع POS',
+      'إدارة المنتجات والمخزون الأساسية',
+      'الفواتير والطباعة',
+      'مستخدم واحد',
+      'تقارير يومية أساسية',
+      'دعم فني عبر الواتساب',
+    ],
+    accent: '#35d07f',
+    glow: 'rgba(53,208,127,0.16)',
+  },
+  {
+    name: 'Growth',
+    tag: 'الأكثر مبيعًا',
+    price: '249',
+    audience: 'للمقاهي والمتاجر المتوسطة',
+    tagline: 'كل ما تحتاجه للتوسع بثقة',
+    cta: 'اختر Growth',
+    features: [
+      'كل مزايا Starter',
+      'إدارة العملاء وبرنامج الولاء',
+      'الموردون والمشتريات',
+      'المحاسبة الأساسية والعروض',
+      'مستخدمان إضافيان',
+      'تقارير متقدمة ونسخ احتياطي تلقائي',
+    ],
+    accent: '#e78871',
+    glow: 'rgba(231, 136, 113,0.2)',
+    featured: true,
+  },
+  {
+    name: 'Business',
+    price: '399',
+    audience: 'للأنشطة متعددة الفروع',
+    tagline: 'إدارة موحدة لكل فروعك',
+    cta: 'ابدأ التوسع',
+    features: [
+      'كل مزايا Growth',
+      'حتى 3 فروع',
+      'متجر إلكتروني مدمج',
+      'إشعارات واتساب والحجوزات',
+      'إدارة السائقين والتوصيل',
+      'صلاحيات وتقارير تنفيذية متقدمة',
+    ],
+    accent: '#b06cff',
+    glow: 'rgba(176,108,255,0.18)',
+  },
+  {
+    name: 'Enterprise / AI',
+    price: '699',
+    audience: 'للشركات والمشاريع الكبيرة',
+    tagline: 'ذكاء أعلى، قرارات أسرع',
+    cta: 'تواصل مع المبيعات',
+    features: [
+      'كل مزايا Business',
+      'فروع ومستخدمون غير محدودين',
+      'تحليلات وتنبيهات مدعومة بالذكاء الاصطناعي',
+      'اقتراح عروض ومبيعات',
+      'ربط API خارجي',
+      'مدير حساب ودعم أولوية عالية',
+    ],
+    accent: '#f2c94c',
+    glow: 'rgba(242,201,76,0.16)',
+  },
+];
+
+const plansEn: Plan[] = [
+  {
+    name: 'Starter',
+    price: '149',
+    audience: 'For home businesses and small stores',
+    tagline: 'Simple to run from day one',
+    cta: 'Start now',
+    features: ['POS checkout', 'Products and basic inventory', 'Invoices and printing', 'One user', 'Basic daily reports', 'WhatsApp support'],
+    accent: '#35d07f',
+    glow: 'rgba(53,208,127,0.16)',
+  },
+  {
+    name: 'Growth',
+    tag: 'Best seller',
+    price: '249',
+    audience: 'For cafes and medium stores',
+    tagline: 'Everything you need to scale',
+    cta: 'Choose Growth',
+    features: ['Everything in Starter', 'Customers and loyalty program', 'Suppliers and purchases', 'Basic accounting and offers', 'Two extra users', 'Advanced reports and auto backup'],
+    accent: '#e78871',
+    glow: 'rgba(231, 136, 113,0.2)',
+    featured: true,
+  },
+  {
+    name: 'Business',
+    price: '399',
+    audience: 'For multi-branch operations',
+    tagline: 'Unified control for all branches',
+    cta: 'Start scaling',
+    features: ['Everything in Growth', 'Up to 3 branches', 'Integrated online store', 'WhatsApp alerts and bookings', 'Drivers and delivery', 'Advanced permissions and reports'],
+    accent: '#b06cff',
+    glow: 'rgba(176,108,255,0.18)',
+  },
+  {
+    name: 'Enterprise / AI',
+    price: '699',
+    audience: 'For companies and large operations',
+    tagline: 'Smarter insights, faster decisions',
+    cta: 'Contact sales',
+    features: ['Everything in Business', 'Unlimited branches and users', 'AI-powered analytics and alerts', 'Sales and offer suggestions', 'External API integration', 'Account manager and priority support'],
+    accent: '#f2c94c',
+    glow: 'rgba(242,201,76,0.16)',
+  },
+];
+
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M4.5 10.5 8.2 14 15.5 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PlanGlyph({ index }: { index: number }) {
+  const paths = [
+    <path key="starter" d="M5 16h14M7 16V8h10v8M10 16v-5h4v5" />,
+    <path key="growth" d="M5 17 10 12l3 3 6-7M15 8h4v4" />,
+    <path key="business" d="M12 5v3M6 19v-3M18 19v-3M12 8 6 13M12 8l6 5M4 19h4M10 19h4M16 19h4M10 5h4" />,
+    <path key="enterprise" d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3ZM18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9L18 15Z" />,
+  ];
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {paths[index] ?? paths[0]}
+    </svg>
+  );
+}
+
+function renderName(name: string): ReactNode {
+  if (name.includes('/')) {
+    const [main, rest] = name.split('/');
+    return (
+      <>
+        {main.trim()} <span className="plan-name-accent">/ {rest.trim()}</span>
+      </>
+    );
+  }
+  return name;
+}
+
+function PricingCard({ plan, index, isArabic, isAnnual }: { plan: Plan; index: number; isArabic: boolean; isAnnual: boolean }) {
+  const displayPrice = isAnnual ? Math.floor((Number(plan.price) * 10) / 12).toString() : plan.price;
+  const priceLabel = isAnnual
+    ? isArabic
+      ? 'ريال / شهريًا عند الدفع السنوي'
+      : 'SAR / mo billed annually'
+    : isArabic
+      ? 'ريال / شهريًا'
+      : 'SAR / mo';
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.5, delay: index * 0.1, ease: 'easeOut' }}
+      className={`plan-card ${plan.featured ? 'plan-card-featured' : ''}`}
+      style={{
+        '--plan-accent': plan.accent,
+        '--plan-glow': plan.glow,
+      } as CSSProperties}
+    >
+      <div className="plan-card-head">
+        <div className="plan-head-text">
+          {plan.featured ? (
+            <span className="plan-badge">{plan.tag}</span>
+          ) : (
+            <h3>{renderName(plan.name)}</h3>
+          )}
+          <p className="plan-audience">{plan.audience}</p>
+        </div>
+        <span className="plan-icon">
+          <PlanGlyph index={index} />
+        </span>
+      </div>
+
+      <div className="plan-price">
+        <div className="plan-price-row">
+          <strong>
+            <AnimatePresence mode="popLayout">
+              <motion.span
+                key={displayPrice}
+                initial={{ opacity: 0, y: -18, filter: 'blur(4px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: 18, filter: 'blur(4px)' }}
+                transition={{ duration: 0.25 }}
+              >
+                {displayPrice}
+              </motion.span>
+            </AnimatePresence>
+          </strong>
+          <span className="plan-price-label">{priceLabel}</span>
+        </div>
+        <p className="plan-tagline">{plan.tagline}</p>
+      </div>
+
+      <ul className="plan-features">
+        {plan.features.map((feature) => (
+          <li key={feature}>
+            <span><CheckIcon /></span>
+            {feature}
+          </li>
+        ))}
+      </ul>
+
+      <button className={`plan-cta ${plan.featured ? 'plan-cta-solid' : 'plan-cta-ghost'}`} type="button">
+        {plan.cta}
+      </button>
+    </motion.article>
+  );
+}
 
 export default function UnifiedBaseSection() {
   const { isArabic, dir } = useLocale();
+  const [isAnnual, setIsAnnual] = useState(true);
+  const plans = isArabic ? plansAr : plansEn;
 
   return (
-    <section id="base" dir={dir} style={{ 
-      position: 'relative', 
-      overflow: 'hidden', 
-      padding: '140px 32px', 
-      background: 'radial-gradient(circle at 10% 18%, rgba(10, 208, 220, 0.34), transparent 14%), radial-gradient(circle at 82% 92%, rgba(12, 175, 187, 0.35), transparent 17%), radial-gradient(circle at 18% 96%, rgba(240, 138, 112, 0.18), transparent 21%), linear-gradient(135deg, #0a1115 0%, #1f2228 46%, #10161b 100%)'
-    }}>
-      
-      {/* background decoration */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 0 }}>
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 150, repeat: Infinity, ease: 'linear' }}
-          style={{ position: 'absolute', top: '-30%', right: '-10%', width: '70vw', height: '70vw', background: 'radial-gradient(circle, rgba(16,214,228,0.04) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(90px)' }}
+    <section id="base" dir={dir} className="pricing-section">
+      <div className="pricing-bg" aria-hidden="true">
+        <motion.span
+          className="pricing-glow pricing-glow-coral"
+          animate={{ scale: [1, 1.12, 1], opacity: [0.42, 0.62, 0.42] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
-        <motion.div 
-          animate={{ rotate: -360 }}
-          transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
-          style={{ position: 'absolute', bottom: '-20%', left: '-10%', width: '80vw', height: '80vw', background: 'radial-gradient(circle, rgba(240,138,112,0.03) 0%, transparent 60%)', borderRadius: '50%', filter: 'blur(100px)' }}
+        <motion.span
+          className="pricing-glow pricing-glow-cyan"
+          animate={{ scale: [1, 1.16, 1], opacity: [0.34, 0.56, 0.34] }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
         />
-        <div style={{ position: 'absolute', inset: 0, backgroundSize: '40px 40px', backgroundImage: 'linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px)', maskImage: 'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)', WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)' }} />
       </div>
 
-      <div className="wrap" style={{ position: 'relative', zIndex: 1 }}>
-
-        {/* ── Header ── */}
+      <div className="wrap pricing-wrap">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          className="pricing-head"
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 80px' }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="eyebrow" style={{ padding: '8px 20px', borderRadius: '100px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-            {isArabic ? 'الأساس المشترك' : 'Shared Foundation'}
-          </span>
-          
-          <h2 style={{ fontSize: 'clamp(2.5rem, 4.5vw, 4rem)', fontWeight: 950, lineHeight: 1.15, marginTop: 24, marginBottom: 24, letterSpacing: isArabic ? 'normal' : '-0.02em' }}>
+          <span className="eyebrow">{isArabic ? 'باقات X10 POS' : 'X10 POS Plans'}</span>
+          <h2>
             {isArabic ? (
-              <>نظام تصميم موحّد<br />لتجربة <span style={{ background: 'linear-gradient(135deg, var(--coral), #ff6b6b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>استثنائية</span></>
+              <>خطط مرنة تدعم<br />نمو مشروعك</>
             ) : (
-              <>Unified design for an<br /><span style={{ background: 'linear-gradient(135deg, var(--coral), #ff6b6b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'inline-block' }}>exceptional</span> experience</>
+              <>Flexible plans that power<br />your growth</>
             )}
           </h2>
-
-          <p style={{ color: 'var(--muted)', fontSize: 'clamp(1.05rem, 1.4vw, 1.25rem)', fontWeight: 500, lineHeight: 1.8, maxWidth: 640, margin: '0 auto' }}>
+          <p>
             {isArabic
-              ? 'كل عنصر في المنصة يتبع نفس معايير التصميم الصارمة — من الألوان والخطوط إلى المكونات والتفاعلات لضمان تناغم مثالي.'
-              : 'Every element in the platform follows the same strict design standards — from colors and fonts to components and interactions.'}
+              ? 'ابدأ بالأدوات الأساسية، وكبّر إمكانياتك وقت ما تحتاج. كل باقة مصممة لتخلّي التشغيل أسرع وأوضح.'
+              : 'Start with the essentials and scale up whenever you need. Every plan is built to make operations faster and clearer.'}
           </p>
+
+          <div className="billing-switch">
+            <span className="billing-note">
+              {isArabic ? 'وفر شهرين مع الاشتراك السنوي' : 'Get 2 months free with annual billing'}
+            </span>
+            <div className="billing-seg" role="group" aria-label="Billing period">
+              <button
+                type="button"
+                className={!isAnnual ? 'active' : ''}
+                onClick={() => setIsAnnual(false)}
+              >
+                {isArabic ? 'شهري' : 'Monthly'}
+              </button>
+              <button
+                type="button"
+                className={isAnnual ? 'active' : ''}
+                onClick={() => setIsAnnual(true)}
+              >
+                {isArabic ? 'سنوي' : 'Annual'}
+              </button>
+            </div>
+          </div>
         </motion.div>
 
-        {/* ── Bento Grid ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }} className="max-lg:!grid-cols-1">
-          
-          {/* Card 1: Unified Design (Spans 2 columns) */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              gridColumn: 'span 2',
-              position: 'relative',
-              borderRadius: '32px',
-              padding: '48px',
-              overflow: 'hidden',
-              background: 'linear-gradient(145deg, rgba(30, 32, 38, 0.7) 0%, rgba(15, 17, 21, 0.9) 100%)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(240,138,112,0.15)',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              minHeight: '420px',
-            }}
-            className="max-lg:!col-span-1"
-          >
-            <div style={{ position: 'absolute', top: 0, right: 0, width: '100%', height: '100%', background: 'radial-gradient(circle at top right, rgba(240,138,112,0.1), transparent 60%)', pointerEvents: 'none' }} />
-            
-            <div style={{ position: 'relative', zIndex: 1, maxWidth: '400px' }}>
-              <h3 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: '16px', color: 'var(--foreground)' }}>
-                {isArabic ? 'نظام تصميم موحّد ومتماسك' : 'Unified Design System'}
-              </h3>
-              <p style={{ color: 'var(--muted)', fontSize: '1.1rem', fontWeight: 600, lineHeight: 1.8 }}>
-                {isArabic ? 'هوية بصرية موحدة عبر جميع الواجهات؛ نستخدم خط Tajawal للعربية وSora للإنجليزية لضمان تناغم مثالي.' : 'A consistent visual identity across all interfaces. We use Tajawal for Arabic and Sora for English.'}
-              </p>
-            </div>
-
-            {/* Visual: Typography & Components Intersection */}
-            <div style={{ position: 'absolute', bottom: '-20px', right: isArabic ? 'auto' : '-20px', left: isArabic ? '-20px' : 'auto', width: '300px', height: '200px' }}>
-              <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} style={{ position: 'absolute', bottom: '40px', right: isArabic ? '40px' : 'auto', left: isArabic ? 'auto' : '40px', width: '180px', height: '120px', background: 'rgba(240,138,112,0.1)', border: '1px solid rgba(240,138,112,0.3)', borderRadius: '16px', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
-                <span style={{ fontSize: '3rem', fontWeight: 900, color: 'var(--coral)', fontFamily: 'var(--font-ar)' }}>ع</span>
-              </motion.div>
-              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }} style={{ position: 'absolute', bottom: '80px', right: isArabic ? '120px' : 'auto', left: isArabic ? 'auto' : '120px', width: '160px', height: '100px', background: 'rgba(16,214,228,0.1)', border: '1px solid rgba(16,214,228,0.3)', borderRadius: '16px', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
-                <span style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--cyan)', fontFamily: 'var(--font-en)' }}>En</span>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Card 2: Performance (Spans 1 column) */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              gridColumn: 'span 1',
-              position: 'relative',
-              borderRadius: '32px',
-              padding: '48px',
-              overflow: 'hidden',
-              background: 'linear-gradient(145deg, rgba(30, 32, 38, 0.7) 0%, rgba(15, 17, 21, 0.9) 100%)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(16,214,228,0.15)',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)',
-              display: 'flex',
-              flexDirection: 'column',
-              minHeight: '420px',
-            }}
-          >
-            <div style={{ position: 'absolute', top: 0, right: 0, width: '100%', height: '100%', background: 'radial-gradient(circle at bottom left, rgba(16,214,228,0.1), transparent 70%)', pointerEvents: 'none' }} />
-            
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <h3 style={{ fontSize: '1.6rem', fontWeight: 900, marginBottom: '16px', color: 'var(--foreground)' }}>
-                {isArabic ? 'أداء فائق واستثنائي' : 'Blazing Performance'}
-              </h3>
-              <p style={{ color: 'var(--muted)', fontSize: '1rem', fontWeight: 600, lineHeight: 1.7 }}>
-                {isArabic ? 'مبني بـ Next.js لضمان أوقات تحميل شبه معدومة وتجربة فائقة السلاسة.' : 'Built with Next.js to guarantee near-zero load times and a smooth experience.'}
-              </p>
-            </div>
-
-            {/* Visual: Animated Chart/Bars */}
-            <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', gap: '12px', marginTop: '40px', position: 'relative', zIndex: 1 }}>
-              {[40, 70, 50, 100].map((h, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ height: 0 }}
-                  whileInView={{ height: `${h}%` }}
-                  transition={{ duration: 1, delay: 0.3 + (i * 0.1), type: 'spring' }}
-                  style={{ width: '32px', background: i === 3 ? 'var(--cyan)' : 'rgba(16,214,228,0.2)', borderRadius: '8px 8px 0 0', borderTop: i !== 3 ? '2px solid var(--cyan)' : 'none', position: 'relative' }}
-                >
-                  {i === 3 && (
-                    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 1.2 }} style={{ position: 'absolute', top: '-30px', left: '50%', transform: 'translateX(-50%)', background: '#fff', color: '#000', fontSize: '0.8rem', fontWeight: 900, padding: '4px 8px', borderRadius: '8px' }}>
-                      99%
-                    </motion.div>
-                  )}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Card 3: Transparency (Spans 3 columns, Horizontal) */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              gridColumn: 'span 3',
-              position: 'relative',
-              borderRadius: '32px',
-              padding: '48px',
-              overflow: 'hidden',
-              background: 'linear-gradient(145deg, rgba(30, 32, 38, 0.7) 0%, rgba(15, 17, 21, 0.9) 100%)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(157,78,221,0.15)',
-              boxShadow: '0 20px 50px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '64px',
-              minHeight: '280px',
-            }}
-            className="max-lg:!col-span-1 max-lg:!flex-col max-lg:!items-start max-lg:!gap-8"
-          >
-            <div style={{ position: 'absolute', top: 0, right: 0, width: '100%', height: '100%', background: 'radial-gradient(circle at center, rgba(157,78,221,0.08), transparent 70%)', pointerEvents: 'none' }} />
-            
-            <div style={{ flex: 1, position: 'relative', zIndex: 1, maxWidth: '600px' }}>
-              <h3 style={{ fontSize: '1.8rem', fontWeight: 900, marginBottom: '16px', color: 'var(--foreground)' }}>
-                {isArabic ? 'شفافية ومصداقية تامة' : 'Absolute Transparency'}
-              </h3>
-              <p style={{ color: 'var(--muted)', fontSize: '1.1rem', fontWeight: 600, lineHeight: 1.8 }}>
-                {isArabic ? 'ما تراه هو ما تحصل عليه؛ لا نستخدم واجهات وهمية. كل ميزة معروضة هنا تعمل بكفاءة وواقعية، مع كود برمجي نظيف وموثوق.' : 'What you see is what you get. Every feature displayed works efficiently, backed by clean and reliable code.'}
-              </p>
-            </div>
-
-            {/* Visual: Wireframe to Real UI Reveal (Scanner) */}
-            <div style={{ flex: 1, width: '100%', position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center' }}>
-              <div style={{ 
-                position: 'relative', 
-                width: '100%', 
-                maxWidth: '340px', 
-                height: '180px', 
-                borderRadius: '20px', 
-                overflow: 'hidden', 
-                background: 'rgba(255,255,255,0.02)', 
-                border: '1px solid rgba(255,255,255,0.05)',
-                boxShadow: 'inset 0 0 20px rgba(0,0,0,0.5)'
-              }}>
-                
-                {/* Base Layer: Wireframe (Fake Interface) */}
-                <div style={{ position: 'absolute', inset: 0, padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: '2px dashed rgba(255,255,255,0.15)' }} />
-                    <div style={{ flex: 1, height: '14px', borderRadius: '7px', background: 'rgba(255,255,255,0.05)' }} />
-                  </div>
-                  <div style={{ width: '85%', height: '12px', borderRadius: '6px', background: 'rgba(255,255,255,0.05)' }} />
-                  <div style={{ width: '65%', height: '12px', borderRadius: '6px', background: 'rgba(255,255,255,0.05)' }} />
-                  <div style={{ marginTop: 'auto', width: '100%', height: '36px', borderRadius: '10px', border: '2px dashed rgba(255,255,255,0.15)' }} />
-                </div>
-
-                {/* Top Layer: Real UI (Revealed by scanner) */}
-                <motion.div 
-                  animate={{ clipPath: ['inset(0 100% 0 0)', 'inset(0 0% 0 0)', 'inset(0 100% 0 0)'] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ 
-                    position: 'absolute', 
-                    inset: 0, 
-                    padding: '24px', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: '18px', 
-                    background: 'linear-gradient(135deg, rgba(30, 32, 38, 1) 0%, rgba(20, 22, 26, 1) 100%)',
-                    borderLeft: '2px solid var(--purple)' 
-                  }}
-                >
-                  <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                    <div style={{ 
-                      width: '40px', 
-                      height: '40px', 
-                      borderRadius: '50%', 
-                      background: 'linear-gradient(135deg, var(--cyan), var(--purple))', 
-                      boxShadow: '0 0 15px rgba(157,78,221,0.5)' 
-                    }} />
-                    <div style={{ flex: 1, height: '14px', borderRadius: '7px', background: 'rgba(255,255,255,0.9)' }} />
-                  </div>
-                  <div style={{ width: '85%', height: '12px', borderRadius: '6px', background: 'rgba(255,255,255,0.5)' }} />
-                  <div style={{ width: '65%', height: '12px', borderRadius: '6px', background: 'rgba(255,255,255,0.3)' }} />
-                  <div style={{ 
-                    marginTop: 'auto', 
-                    width: '100%', 
-                    height: '36px', 
-                    borderRadius: '10px', 
-                    background: 'var(--purple)', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center', 
-                    color: '#fff', 
-                    fontSize: '0.85rem', 
-                    fontWeight: 800,
-                    boxShadow: '0 8px 20px rgba(157,78,221,0.4)'
-                  }}>
-                    {isArabic ? 'بيانات حقيقية' : 'Live Data Active'}
-                  </div>
-                </motion.div>
-
-                {/* Scanner Laser Line */}
-                <motion.div
-                  animate={{ left: ['0%', '100%', '0%'] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ 
-                    position: 'absolute', 
-                    top: 0, 
-                    bottom: 0, 
-                    width: '3px', 
-                    background: 'var(--purple)', 
-                    boxShadow: '0 0 25px 6px var(--purple), 0 0 10px 2px #fff', 
-                    zIndex: 10 
-                  }}
-                />
-              </div>
-            </div>
-          </motion.div>
-
+        <div className="plan-grid">
+          {plans.map((plan, index) => (
+            <PricingCard key={plan.name} plan={plan} index={index} isArabic={isArabic} isAnnual={isAnnual} />
+          ))}
         </div>
       </div>
     </section>
