@@ -57,19 +57,46 @@ function Navbar() {
   const { setLocale, isArabic } = useLocale();
   const { theme, toggle } = useTheme();
   const links = isArabic ? linksAr : linksEn;
+  const [activeHref, setActiveHref] = useState('#');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['#experience', '#base', '#path'];
+      for (const id of sections) {
+        const el = document.querySelector(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 120 && rect.bottom >= 120) {
+            setActiveHref(id);
+            return;
+          }
+        }
+      }
+      setActiveHref('#');
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <header className="site-header site-header-mobile-hide">
       <nav className="topbar" aria-label="Main navigation">
         <a href="#" className="x10-logo" aria-label="X10">
-          {theme === 'light' ? (
-            <img src="/logo-brand.svg" alt="X10" className="logo-img" />
-          ) : (
-            <><span className="logo-x">X</span><span className="logo-ten"><span /><span /><span /></span></>
-          )}
+          <img
+            src={theme === 'light' ? '/logo-brand.svg' : '/logo-brand-dark.svg'}
+            alt="X10"
+            className="logo-img"
+          />
         </a>
         <div className="nav-links">
           {links.map((link) => (
-            <a key={link.href} href={link.href} className="nav-link">{link.label}</a>
+            <a
+              key={link.href}
+              href={link.href}
+              className={`nav-link ${activeHref === link.href ? 'nav-link--active' : ''}`}
+            >
+              {link.label}
+            </a>
           ))}
         </div>
         <div className="nav-actions">
@@ -842,11 +869,11 @@ function FooterSection() {
           {/* Brand column */}
           <div className="footer-brand">
             <a href="#" className="x10-logo" aria-label="X10">
-              {theme === 'light' ? (
-                <img src="/logo-brand.svg" alt="X10" className="logo-img" />
-              ) : (
-                <><span className="logo-x">X</span><span className="logo-ten"><span /><span /><span /></span></>
-              )}
+              <img
+                src={theme === 'light' ? '/logo-brand.svg' : '/logo-brand-dark.svg'}
+                alt="X10"
+                className="logo-img"
+              />
             </a>
             <p className="footer-brand-copy">
               {isArabic
