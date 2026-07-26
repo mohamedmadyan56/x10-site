@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  useState, useEffect, ReactNode,
+  useState, useEffect, useLayoutEffect, ReactNode,
   useRef, useCallback
 } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, MotionValue } from 'framer-motion';
@@ -333,16 +333,12 @@ const expItemsEn = [
 ];
 
 function ImageStack({ progress, isArabic }: { progress: MotionValue<number>; isArabic: boolean }) {
-  const op1 = useTransform(progress, [0, 0.06, 0.2, 0.25], [1, 1, 1, 0]);
   const op2 = useTransform(progress, [0.2, 0.25, 0.45, 0.5], [0, 1, 1, 0]);
   const op3 = useTransform(progress, [0.45, 0.5, 0.7, 0.75], [0, 1, 1, 0]);
   const op4 = useTransform(progress, [0.7, 0.75, 1], [0, 1, 1]);
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <motion.div className="x-image-frame" style={{ opacity: op1, position: 'absolute', inset: 0, width: '100%', height: '100%', aspectRatio: 'auto' }}>
-        <img src="/generated-image-7e678040-c54d-4cfc-9407-a606acdc5521.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-      </motion.div>
       <motion.div style={{ opacity: op2, position: 'absolute', inset: 0 }}>
         <DashboardPreview isArabic={isArabic} />
       </motion.div>
@@ -612,7 +608,6 @@ function GlobalScrollImage() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const imgFrameRef = useRef<HTMLDivElement>(null);
   const colFrameRef = useRef<HTMLDivElement>(null);
-  const [ready, setReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // ابدأ دايماً من الهيرو بعد الـ refresh (ألغِ استرجاع المتصفح لموضع السكرول)
@@ -629,24 +624,25 @@ function GlobalScrollImage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  useEffect(() => {
-    // Don't run flying animation on mobile
+  useLayoutEffect(() => {
     if (isMobile) return;
 
     const wrap = wrapRef.current;
     if (!wrap) return;
 
     let raf = 0;
+    let retryTimer = 0;
 
     const apply = () => {
       raf = 0;
       const heroTarget = document.getElementById('hero-image-source');
       const expTarget = document.getElementById('image-target');
-      const journeyTarget = document.getElementById('journey-center-target');
       const expSection = document.getElementById('experience');
+      const journeyTarget = document.getElementById('journey-center-target');
       const journeySection = document.getElementById('journey-map');
 
-      if (!heroTarget || !expTarget || !expSection || !journeyTarget || !journeySection) return;
+      // Hero + experience are enough for Phases 1 & 2
+      if (!heroTarget || !expTarget || !expSection) return false;
 
       const scrollY = window.scrollY;
       const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -655,26 +651,16 @@ function GlobalScrollImage() {
       const finishScroll1 = Math.max(1, expSection.offsetTop);
       const p1 = Math.min(1, Math.max(0, scrollY / finishScroll1));
 
-      // Phase 3: Experience -> Journey
-      const scrollStart2 = expSection.offsetTop + expSection.offsetHeight - window.innerHeight;
-      const scrollEnd2 = journeySection.offsetTop;
-      const diff2 = Math.max(1, scrollEnd2 - scrollStart2);
-      const p2 = Math.min(1, Math.max(0, (scrollY - scrollStart2) / diff2));
-
       const rHero = heroTarget.getBoundingClientRect();
       const rExp = expTarget.getBoundingClientRect();
-      const rJourney = journeyTarget.getBoundingClientRect();
 
       if (scrollY < finishScroll1) {
-        // Phase 1 active
+        // Phase 1: Hero → Experience
         wrap.style.top = `${lerp(rHero.top, rExp.top, p1)}px`;
         wrap.style.left = `${lerp(rHero.left, rExp.left, p1)}px`;
         wrap.style.width = `${lerp(rHero.width, rExp.width, p1)}px`;
         wrap.style.height = `${lerp(rHero.height, rExp.height, p1)}px`;
-
-        // Fade at the very end to crossfade with ImageStack
-        const fadeStart = 1;
-        wrap.style.opacity = p1 >= fadeStart ? '0' : '1';
+        wrap.style.opacity = '1';
 
         if (imgFrameRef.current) {
           imgFrameRef.current.style.filter = 'none';
@@ -683,45 +669,76 @@ function GlobalScrollImage() {
         if (colFrameRef.current) {
           colFrameRef.current.style.opacity = '0';
         }
-      } 
-      else if (scrollY >= scrollStart2 && p2 < 1) {
-        // Phase 3 active: Experience to Journey Center Column
+        return true;
+      }
+
+      // Need journey elements for Phases 2 & 3
+      if (!journeyTarget || !journeySection) return false;
+
+      const scrollStart2 = expSection.offsetTop + expSection.offsetHeight - window.innerHeight;
+      const scrollEnd2 = journeySection.offsetTop;
+      const diff2 = Math.max(1, scrollEnd2 - scrollStart2);
+      const p2 = Math.min(1, Math.max(0, (scrollY - scrollStart2) / diff2));
+      const rJourney = journeyTarget.getBoundingClientRect();
+
+      if (scrollY < scrollStart2) {
+        // Phase 2: Stay at Experience target, then fade out smoothly
+        const fadeDist = Math.max(1, window.innerHeight * 0.35);
+        const pFade = Math.min(1, (scrollY - finishScroll1) / fadeDist);
+        wrap.style.top = `${rExp.top}px`;
+        wrap.style.left = `${rExp.left}px`;
+        wrap.style.width = `${rExp.width}px`;
+        wrap.style.height = `${rExp.height}px`;
+        wrap.style.opacity = String(1 - pFade);
+
+        if (imgFrameRef.current) {
+          imgFrameRef.current.style.filter = 'none';
+          imgFrameRef.current.style.opacity = '1';
+        }
+        if (colFrameRef.current) {
+          colFrameRef.current.style.opacity = '0';
+        }
+      } else if (p2 < 1) {
+        // Phase 3: Experience → Journey
         wrap.style.top = `${lerp(rExp.top, rJourney.top, p2)}px`;
         wrap.style.left = `${lerp(rExp.left, rJourney.left, p2)}px`;
         wrap.style.width = `${lerp(rExp.width, rJourney.width, p2)}px`;
         wrap.style.height = `${lerp(rExp.height, rJourney.height, p2)}px`;
-
         wrap.style.opacity = '1';
 
         if (imgFrameRef.current) {
           imgFrameRef.current.style.filter = 'hue-rotate(180deg) invert(1)';
-          // Fade out X image as it morphs to column
           imgFrameRef.current.style.opacity = String(Math.max(0, 1 - p2 * 1.5));
         }
         if (colFrameRef.current) {
-          // Fade in the column styles
           colFrameRef.current.style.opacity = String(p2);
         }
-      } 
-      else {
+      } else {
         wrap.style.opacity = '0';
       }
+
+      return true;
     };
 
-    const onScroll = () => {
+    const scheduleApply = () => {
       if (!raf) raf = requestAnimationFrame(apply);
     };
 
-    setReady(true);
-    apply();
-    const t = setTimeout(apply, 500);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    const runApply = () => {
+      const positioned = apply();
+      if (!positioned) {
+        retryTimer = window.setTimeout(runApply, 50);
+      }
+    };
+
+    runApply();
+    window.addEventListener('scroll', scheduleApply, { passive: true });
+    window.addEventListener('resize', scheduleApply);
     return () => {
-      clearTimeout(t);
+      clearTimeout(retryTimer);
       if (raf) cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('scroll', scheduleApply);
+      window.removeEventListener('resize', scheduleApply);
     };
   }, [isMobile]);
 
@@ -729,11 +746,8 @@ function GlobalScrollImage() {
   if (isMobile) return null;
 
   return (
-    <motion.div
+    <div
       ref={wrapRef}
-      initial={{ opacity: 0, scale: 0.9, y: 60 }}
-      animate={ready ? { opacity: 1, scale: 1, y: 0 } : {}}
-      transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
       style={{
         position: 'fixed',
         top: 0,
@@ -742,6 +756,7 @@ function GlobalScrollImage() {
         height: 0,
         zIndex: 50,
         pointerEvents: 'none',
+        opacity: 1,
         willChange: 'top, left, width, height, opacity',
       }}
     >
@@ -758,7 +773,7 @@ function GlobalScrollImage() {
       <div ref={imgFrameRef} className="x-image-frame" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', aspectRatio: 'auto' }}>
         <img src="/generated-image-7e678040-c54d-4cfc-9407-a606acdc5521.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -851,21 +866,17 @@ function FooterSection() {
           </div>
 
           {/* Hero-style divider rail */}
-          <div className="footer-rail" aria-hidden="true"><span /></div>
+          <div className="footer-divider-rail" aria-hidden="true"><span /></div>
 
           {/* Link columns */}
-          <nav className="footer-links" aria-label={isArabic ? 'روابط الفوتر' : 'Footer links'}>
-            {linkColumns.map((col) => (
-              <div key={col.title} className="footer-link-col">
-                <h5>{col.title}</h5>
-                <ul>
-                  {col.links.map((link) => (
-                    <li key={link}><a href="#">{link}</a></li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </nav>
+          {linkColumns.map((col) => (
+            <div key={col.title} className="footer-col">
+              <h5>{col.title}</h5>
+              {col.links.map((link) => (
+                <a key={link} href="#">{link}</a>
+              ))}
+            </div>
+          ))}
         </div>
 
         {/* Trust badges */}
